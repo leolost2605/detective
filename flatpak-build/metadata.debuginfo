@@ -1,5 +1,0 @@
-[Runtime]
-name=io.github.leolost2605.detective.Debug
-
-[ExtensionOf]
-ref=app/io.github.leolost2605.detective/x86_64/master
