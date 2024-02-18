@@ -3,10 +3,10 @@
  * SPDX-FileCopyrightText: 2023 Your Organization (https://yourwebsite.com)
  */
 
-public class MyApp : Gtk.Application {
-    public MyApp () {
+public class Detective.Application : Gtk.Application {
+    public Application () {
         Object (
-            application_id: "io.github.myteam.myapp",
+            application_id: "io.github.leolost2605.detective",
             flags: ApplicationFlags.FLAGS_NONE
         );
     }
@@ -19,13 +19,13 @@ public class MyApp : Gtk.Application {
         var main_window = new Gtk.ApplicationWindow (this) {
             default_height = 300,
             default_width = 300,
-            title = "MyApp",
+            title = "Detective",
             titlebar = headerbar
         };
         main_window.present ();
     }
 
     public static int main (string[] args) {
-        return new MyApp ().run (args);
+        return new Application ().run (args);
     }
 }

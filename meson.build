@@ -1,5 +1,5 @@
 # project name and programming language
-project('io.github.myteam.myapp', 'vala', 'c')
+project('io.github.leolost2605.detective', 'vala', 'c')
 
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
@@ -13,16 +13,14 @@ executable(
 
 # Install our .desktop file so the Applications Menu will see it
 install_data(
-    'data' / 'myapp.desktop',
-    install_dir: get_option('datadir') / 'applications',
-    rename: meson.project_name() + '.desktop'
+    'data' / meson.project_name() + '.desktop',
+    install_dir: get_option('datadir') / 'applications'
 )
 
 # Install our .appdata.xml file so AppCenter will see it
 install_data(
-    'data' / 'myapp.appdata.xml',
+    'data' / meson.project_name() + '.appdata.xml',
     install_dir: get_option('datadir') / 'metainfo',
-    rename: meson.project_name() + '.appdata.xml'
 )
 
 # Install our icons in all the required sizes
