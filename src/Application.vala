@@ -12,15 +12,10 @@ public class Detective.Application : Gtk.Application {
     }
 
     protected override void activate () {
-        var headerbar = new Gtk.HeaderBar () {
-            show_title_buttons = true
-        };
-
-        var main_window = new Gtk.ApplicationWindow (this) {
+        var main_window = new SearchWindow (this) {
             default_height = 300,
             default_width = 300,
-            title = "Detective",
-            titlebar = headerbar
+            title = "Detective"
         };
         main_window.present ();
     }
