@@ -12,7 +12,7 @@ public abstract class SearchProvider : Object {
 
     /**
      * Called when a current search is ended by the user. The implementation should cancel
-     * any ongoing queries, remove all matches from the list and treat a new all to search
+     * any ongoing queries, remove all matches from the list and treat a new call to search
      * as a completely separate search.
      */
     public abstract void clear ();

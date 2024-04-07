@@ -11,5 +11,5 @@ execute with `io.github.myteam.myapp`
 ## What to expect
 
 Nothing fancy.
-This is more of a sideproject for me where I want to try the power of ListModels, Expressions, Sorters and Filters.
+This is more of a sideproject for me where I want to try the power of GTK's ListModels, Expressions, Sorters and Filters.
 If something useful comes from it, great, if not experience was gained :)
