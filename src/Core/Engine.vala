@@ -21,6 +21,7 @@ public class Engine : Object {
 
         // Temporary
         search_providers.append (new ActionsProvider ());
+        search_providers.append (new TrackerProvider ());
     }
 
     public void search (string search_term) {

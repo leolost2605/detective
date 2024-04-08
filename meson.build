@@ -12,9 +12,11 @@ executable(
     'src' / 'Core' / 'MatchType.vala',
     'src' / 'Core' / 'SearchProvider.vala',
     'src' / 'Plugins' / 'ActionsPlugin.vala',
+    'src' / 'Plugins' / 'TrackerPlugin.vala',
     dependencies: [
         dependency('gtk4'),
-        dependency('granite-7')
+        dependency('granite-7'),
+        dependency('tracker-sparql-3.0')
     ],
     install: true
 )

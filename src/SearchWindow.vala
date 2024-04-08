@@ -30,9 +30,13 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
 
+        var scrolled_window = new Gtk.ScrolledWindow () {
+            child = list_view
+        };
+
         var content = new Gtk.Box (VERTICAL, 6);
         content.append (entry);
-        content.append (list_view);
+        content.append (scrolled_window);
 
         child = content;
         titlebar = new Gtk.Grid () { visible = false };
