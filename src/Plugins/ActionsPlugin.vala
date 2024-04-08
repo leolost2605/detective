@@ -39,5 +39,6 @@ public class ActionsProvider : SearchProvider {
 
     public override void clear () {
         searching = false;
+        actions.items_changed (0, actions.get_n_items (), actions.get_n_items ());
     }
 }

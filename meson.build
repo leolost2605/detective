@@ -5,6 +5,7 @@ project('io.github.leolost2605.detective', 'vala', 'c')
 executable(
     meson.project_name(),
     'src' / 'Application.vala',
+    'src' / 'MatchRow.vala',
     'src' / 'SearchWindow.vala',
     'src' / 'Core' / 'Engine.vala',
     'src' / 'Core' / 'Match.vala',
@@ -12,7 +13,8 @@ executable(
     'src' / 'Core' / 'SearchProvider.vala',
     'src' / 'Plugins' / 'ActionsPlugin.vala',
     dependencies: [
-        dependency('gtk4')
+        dependency('gtk4'),
+        dependency('granite-7')
     ],
     install: true
 )

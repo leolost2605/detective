@@ -14,13 +14,21 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         var selection_model = new Gtk.SingleSelection (engine.matches);
 
         var factory = new Gtk.SignalListItemFactory ();
+        factory.setup.connect ((obj) => {
+            var list_item = (Gtk.ListItem) obj;
+            list_item.child = new MatchRow ();
+        });
+
         factory.bind.connect ((obj) => {
             var list_item = (Gtk.ListItem) obj;
             var item = (Match) list_item.item;
-            list_item.child = new Gtk.Label (item.text);
+            ((MatchRow) list_item.child).bind (item);
         });
 
-        var list_view = new Gtk.ListView (selection_model, factory);
+        var list_view = new Gtk.ListView (selection_model, factory) {
+            vexpand = true
+        };
+        list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
 
         var content = new Gtk.Box (VERTICAL, 6);
         content.append (entry);
@@ -29,6 +37,16 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         child = content;
         titlebar = new Gtk.Grid () { visible = false };
 
-        entry.search_changed.connect (() => engine.search (entry.text));
+        entry.search_changed.connect (() => {
+            if (entry.text.strip () != "") {
+                engine.search (entry.text);
+            } else {
+                engine.clear_search ();
+            }
+        });
+
+        list_view.activate.connect ((position) => {
+            ((Match) engine.matches.get_item (position)).activated ();
+        });
     }
 }
