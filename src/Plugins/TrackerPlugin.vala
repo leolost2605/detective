@@ -22,6 +22,7 @@ public class TrackerProvider : SearchProvider {
     }
 
     public override void search (string search_term) {
+        matches_internal.remove_all ();
         searching = true;
         this.search_term = search_term;
         search_tracker.begin ();
@@ -36,15 +37,21 @@ public class TrackerProvider : SearchProvider {
         try {
             var tracker_statement_id = tracker_connection.query_statement (
                 """
-                    SELECT nie:title(?r) { ?r a nie:InformationElement ; fts:match "%s" }
+                    SELECT nie:title(?r) nfo:softwareIcon(?r) { ?r a nfo:SoftwareApplication ; fts:match "%s" } ORDER BY fts:rank(?r)
                 """.printf (search_term)
             );
 
             var cursor = yield tracker_statement_id.execute_async (null);
 
             while (yield cursor.next_async ()) {
-                var match = new Match (match_type, 0, cursor.get_string (0), null, null);
-                warning (cursor.get_string (0));
+                var str = cursor.get_string (1);
+                Icon? icon = null;
+                if (str != null) {
+                    var split = cursor.get_string (1).split (":");
+                    var icon_name = split[split.length - 1];
+                    icon = new ThemedIcon (icon_name);
+                }
+                var match = new Match (match_type, 0, cursor.get_string (0), icon, null);
                 matches_internal.append (match);
             }
 

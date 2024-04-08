@@ -13,8 +13,8 @@ public class Detective.Application : Gtk.Application {
 
     protected override void activate () {
         var main_window = new SearchWindow (this) {
-            default_height = 300,
-            default_width = 300,
+            default_height = 400,
+            default_width = 600,
             title = "Detective"
         };
         main_window.present ();
