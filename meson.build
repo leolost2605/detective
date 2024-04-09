@@ -11,6 +11,7 @@ executable(
     'src' / 'Core' / 'Match.vala',
     'src' / 'Core' / 'MatchType.vala',
     'src' / 'Core' / 'SearchProvider.vala',
+    'src' / 'Core' / 'Utils' / 'TrackerProvider.vala',
     'src' / 'Plugins' / 'ActionsPlugin.vala',
     'src' / 'Plugins' / 'TrackerPlugin.vala',
     dependencies: [
