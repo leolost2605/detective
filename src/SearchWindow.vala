@@ -26,7 +26,8 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
 
         var list_view = new Gtk.ListView (selection_model, factory) {
-            vexpand = true
+            vexpand = true,
+            single_click_activate = true
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
 

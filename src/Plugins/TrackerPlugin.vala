@@ -37,7 +37,7 @@ public class TrackerProvider : SearchProvider {
         try {
             var tracker_statement_id = tracker_connection.query_statement (
                 """
-                    SELECT nie:title(?r) nfo:softwareIcon(?r) { ?r a nfo:SoftwareApplication ; fts:match "%s" } ORDER BY fts:rank(?r)
+                    SELECT nie:title(?r) nfo:softwareIcon(?r) nie:url(nie:isStoredAs(?r)) { ?r a nfo:SoftwareApplication ; fts:match "%s" } ORDER BY fts:rank(?r)
                 """.printf (search_term)
             );
 
@@ -52,6 +52,12 @@ public class TrackerProvider : SearchProvider {
                     icon = new ThemedIcon (icon_name);
                 }
                 var match = new Match (match_type, 0, cursor.get_string (0), icon, null);
+                var url = cursor.get_string (2);
+                match.activated.connect (() => {
+                    var split_url = url.split ("/");
+                    var app_info = new DesktopAppInfo (split_url[split_url.length - 1]);
+                    app_info.launch (null, null);
+                });
                 matches_internal.append (match);
             }
 
