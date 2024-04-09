@@ -1,4 +1,3 @@
-
 public class Detective.SearchWindow : Gtk.ApplicationWindow {
     private Engine engine;
 

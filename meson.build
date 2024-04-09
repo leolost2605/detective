@@ -1,23 +1,21 @@
 # project name and programming language
 project('io.github.leolost2605.detective', 'vala', 'c')
 
+pkgconfig = import('pkgconfig')
+
+subdir('lib')
+
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(
     meson.project_name(),
     'src' / 'Application.vala',
     'src' / 'MatchRow.vala',
     'src' / 'SearchWindow.vala',
-    'src' / 'Core' / 'Engine.vala',
-    'src' / 'Core' / 'Match.vala',
-    'src' / 'Core' / 'MatchType.vala',
-    'src' / 'Core' / 'SearchProvider.vala',
-    'src' / 'Core' / 'Utils' / 'TrackerProvider.vala',
-    'src' / 'Plugins' / 'ActionsPlugin.vala',
-    'src' / 'Plugins' / 'TrackerPlugin.vala',
     dependencies: [
         dependency('gtk4'),
         dependency('granite-7'),
-        dependency('tracker-sparql-3.0')
+        dependency('tracker-sparql-3.0'),
+        lib_dep
     ],
     install: true
 )

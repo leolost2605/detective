@@ -30,16 +30,16 @@ public class TrackerProvider : SearchProvider {
         }
     }
 
-    public override void search (string search_term) {
+    internal override void search (string search_term) {
         this.search_term = search_term;
         search_tracker.begin ();
     }
 
-    public override void clear () {
+    internal override void clear () {
         matches_internal.remove_all ();
     }
 
-    public async void search_tracker () {
+    private async void search_tracker () {
         try {
             var tracker_statement_id = tracker_connection.query_statement (
                 query.printf (search_term)

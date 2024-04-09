@@ -1,7 +1,6 @@
 public class Match : Object {
-    public static Gtk.Expression match_type_expression = new Gtk.PropertyExpression (typeof (Match), null, "match-type");
-    public static Gtk.Expression relevancy_expression = new Gtk.PropertyExpression (typeof (Match), null, "relevancy");
-    public static Gtk.Expression text_expression = new Gtk.PropertyExpression (typeof (Match), null, "text");
+    internal static Gtk.Expression match_type_expression = new Gtk.PropertyExpression (typeof (Match), null, "match-type");
+    internal static Gtk.Expression relevancy_expression = new Gtk.PropertyExpression (typeof (Match), null, "relevancy");
 
     public signal void activated ();
 

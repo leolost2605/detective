@@ -1,4 +1,8 @@
-public class Engine : Object {
+/**
+ * Automatically loads plugins and queries them for searches.
+ * Used for implementing frontends.
+ */
+public class Detective.Engine : Object {
     public Gtk.SortListModel matches { get; construct; }
 
     private ListStore search_providers;
@@ -22,6 +26,7 @@ public class Engine : Object {
         // Temporary
         search_providers.append (new ActionsProvider ());
         search_providers.append (AppsProvider.get_provider ());
+        search_providers.append (FilePlugin.get_provider ());
     }
 
     public void search (string search_term) {

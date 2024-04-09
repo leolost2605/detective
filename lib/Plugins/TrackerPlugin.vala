@@ -17,8 +17,12 @@ public class AppsProvider : Object {
             var url = cursor.get_string (2);
             match.activated.connect (() => {
                 var split_url = url.split ("/");
-                var app_info = new DesktopAppInfo (split_url[split_url.length - 1]);
-                app_info.launch (null, null);
+                var app_info = new GLib.DesktopAppInfo (split_url[split_url.length - 1]);
+                try {
+                    app_info.launch (null, null);
+                } catch (Error e) {
+                    warning ("FAILED TO LAUNCH APP");
+                }
             });
             return match;
         });
