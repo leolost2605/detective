@@ -10,7 +10,10 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
         var entry = new Gtk.SearchEntry ();
 
-        var selection_model = new Gtk.SingleSelection (engine.matches);
+        var selection_model = new Gtk.SingleSelection (engine.matches) {
+            autoselect = false,
+            can_unselect = true
+        };
 
         var factory = new Gtk.SignalListItemFactory ();
         factory.setup.connect ((obj) => {
@@ -51,6 +54,11 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
         list_view.activate.connect ((position) => {
             ((Match) engine.matches.get_item (position)).activated ();
+            destroy ();
+        });
+
+        entry.activate.connect (() => {
+            list_view.activate (selection_model.selected);
         });
     }
 }
