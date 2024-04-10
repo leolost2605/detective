@@ -13,7 +13,7 @@ public static TrackerProvider get_provider () {
     """;
 
     return new TrackerProvider (query, (cursor) => {
-        var match = new Match (match_type, 0, cursor.get_string (0), null, null);
+        var match = new Match (match_type, 10, cursor.get_string (0), null, null);
         var url = cursor.get_string (1);
         match.activated.connect (() => {
             try {

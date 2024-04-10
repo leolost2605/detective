@@ -1,1 +1,2 @@
 subdir('FilePlugin')
+subdir('AppsPlugin')

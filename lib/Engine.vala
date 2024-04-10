@@ -26,7 +26,6 @@ public class Detective.Engine : Object {
 
         // Temporary
         search_providers.append (new ActionsProvider ());
-        search_providers.append (AppsProvider.get_provider ());
 
         plugin_loader = new PluginLoader ();
 
