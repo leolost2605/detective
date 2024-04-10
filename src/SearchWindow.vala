@@ -8,7 +8,12 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     construct {
         engine = new Engine ();
 
-        var entry = new Gtk.SearchEntry ();
+        var entry = new Gtk.SearchEntry () {
+            margin_top = 6,
+            margin_bottom = 6,
+            margin_start = 6,
+            margin_end = 6
+        };
 
         var selection_model = new Gtk.SingleSelection (engine.matches) {
             autoselect = false,
