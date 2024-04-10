@@ -4,7 +4,7 @@ public static TrackerProvider get_provider () {
     match_type = new MatchType ("file", "File");
 
     var query = """
-        SELECT nfo:fileName(?r) nie:url(?r) {
+        SELECT nfo:fileName(?r) nie:url(?r) nie:mimeType(nie:interpretedAs(?r)) {
             GRAPH tracker:FileSystem {
                 ?r a nfo:FileDataObject ;
                 fts:match "%s"
@@ -13,7 +13,11 @@ public static TrackerProvider get_provider () {
     """;
 
     return new TrackerProvider (query, (cursor) => {
-        var match = new Match (match_type, 10, cursor.get_string (0), null, null);
+        Icon? icon = null;
+        if (cursor.is_bound (2)) {
+            icon = ContentType.get_icon (cursor.get_string (2));
+        }
+        var match = new Match (match_type, 10, cursor.get_string (0), icon, null);
         var url = cursor.get_string (1);
         match.activated.connect (() => {
             try {

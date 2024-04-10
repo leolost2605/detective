@@ -5,7 +5,6 @@ sources = [
     'PluginLoader.vala',
     'SearchProvider.vala',
     'Utils' / 'TrackerProvider.vala',
-    'Plugins' / 'ActionsPlugin.vala',
 ]
 
 libdetective_deps = [

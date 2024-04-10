@@ -24,9 +24,6 @@ public class Detective.Engine : Object {
             //  section_sorter = section_sorter
         };
 
-        // Temporary
-        search_providers.append (new ActionsProvider ());
-
         plugin_loader = new PluginLoader ();
 
         foreach (var provider in plugin_loader.providers) {
