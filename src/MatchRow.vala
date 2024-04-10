@@ -19,7 +19,7 @@ public class MatchRow : Gtk.Box {
 
     public void bind (Match match) {
         icon.gicon = match.icon;
-        text.label = match.text;
+        text.label = match.title;
         text.secondary_text = match.description;
     }
 }
