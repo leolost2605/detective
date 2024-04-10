@@ -1,16 +1,14 @@
 public class MatchRow : Gtk.Box {
     private Gtk.Image icon;
-    private Gtk.Label text;
+    private Granite.HeaderLabel text;
 
     construct {
         icon = new Gtk.Image () {
             icon_size = LARGE
         };
 
-        text = new Gtk.Label (null) {
-            ellipsize = MIDDLE,
-            hexpand = true,
-            xalign = 0
+        text = new Granite.HeaderLabel ("") {
+            hexpand = true
         };
 
         orientation = HORIZONTAL;
@@ -22,5 +20,6 @@ public class MatchRow : Gtk.Box {
     public void bind (Match match) {
         icon.gicon = match.icon;
         text.label = match.text;
+        text.secondary_text = match.description;
     }
 }
