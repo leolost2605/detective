@@ -9,7 +9,7 @@ public class Query : Object {
 
     public Cancellable cancellable { get; construct; }
 
-    public Query (string search_term) {
+    internal Query (string search_term) {
         Object (search_term: search_term);
     }
 
@@ -17,7 +17,7 @@ public class Query : Object {
         cancellable = new Cancellable ();
     }
 
-    public void cancel () {
+    internal void cancel () {
         cancellable.cancel ();
     }
 }
