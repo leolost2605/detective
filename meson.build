@@ -4,6 +4,7 @@ project('io.github.leolost2605.detective', 'vala', 'c')
 pkgconfig = import('pkgconfig')
 
 subdir('lib')
+subdir('plugins')
 
 # Create a new executable, list the files we want to compile, list the dependencies we need, and install
 executable(

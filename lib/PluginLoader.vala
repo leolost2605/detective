@@ -31,7 +31,7 @@ internal class PluginLoader : Object {
     }
 
     private void load (string path) {
-		if (Module.supported () == false) {
+		if (!Module.supported ()) {
 			error ("No module support");
 		}
 
@@ -54,7 +54,8 @@ internal class PluginLoader : Object {
             return;
         }
 
+        module.make_resident ();
+
         providers += provider;
-        warning ("LOADED");
 	}
 }

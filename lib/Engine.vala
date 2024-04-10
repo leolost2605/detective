@@ -6,6 +6,7 @@ public class Detective.Engine : Object {
     public Gtk.SortListModel matches { get; construct; }
 
     private ListStore search_providers;
+    private PluginLoader plugin_loader;
 
     construct {
         search_providers = new ListStore (typeof (SearchProvider));
@@ -26,7 +27,12 @@ public class Detective.Engine : Object {
         // Temporary
         search_providers.append (new ActionsProvider ());
         search_providers.append (AppsProvider.get_provider ());
-        search_providers.append (FilePlugin.get_provider ());
+
+        plugin_loader = new PluginLoader ();
+
+        foreach (var provider in plugin_loader.providers) {
+            search_providers.append (provider);
+        }
     }
 
     public void search (string search_term) {
