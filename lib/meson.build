@@ -3,6 +3,7 @@ sources = [
     'Match.vala',
     'MatchType.vala',
     'PluginLoader.vala',
+    'Query.vala',
     'SearchProvider.vala',
     'Utils' / 'TrackerProvider.vala',
 ]

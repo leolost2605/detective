@@ -8,7 +8,7 @@ public abstract class SearchProvider : Object {
      * meaning the implementation should remove all matches from the model and treat
      * a new call to search as a completely separate search.
      */
-    public abstract void search (string search_term);
+    public abstract void search (Query query);
 
     /**
      * Called when a current search is ended by the user. The implementation should cancel

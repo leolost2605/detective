@@ -6,7 +6,7 @@ public class TrackerProvider : SearchProvider {
 
     public delegate Match CreateMatchFunc (Tracker.Sparql.Cursor cursor);
 
-    private string search_term = "";
+    private Query search_query;
 
     private ListStore matches_internal;
     private Tracker.Sparql.Connection tracker_connection;
@@ -30,8 +30,8 @@ public class TrackerProvider : SearchProvider {
         }
     }
 
-    internal override void search (string search_term) {
-        this.search_term = search_term;
+    internal override void search (Query search_query) {
+        this.search_query = search_query;
         search_tracker.begin ();
     }
 
@@ -42,21 +42,28 @@ public class TrackerProvider : SearchProvider {
     private async void search_tracker () {
         try {
             var tracker_statement_id = tracker_connection.query_statement (
-                query.printf (search_term)
+                query.printf (search_query.search_term)
             );
 
-            var cursor = yield tracker_statement_id.execute_async (null);
+            var cursor = yield tracker_statement_id.execute_async (search_query.cancellable);
 
             matches_internal.remove_all ();
 
             while (yield cursor.next_async ()) {
+                if (search_query.cancelled) {
+                    throw new IOError.CANCELLED ("Search was cancelled");
+                }
                 var match = create_match_func (cursor);
                 matches_internal.append (match);
             }
 
             cursor.close ();
         } catch (Error e) {
-            warning (e.message);
+            if (e is IOError.CANCELLED) {
+                matches_internal.remove_all ();
+            } else {
+                warning (e.message);
+            }
         }
     }
 }
