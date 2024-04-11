@@ -13,13 +13,14 @@ public static TrackerProvider get_provider () {
         }
         var match = new Match (match_type, 20, cursor.get_string (0), null, icon, null);
         var url = cursor.get_string (2);
-        match.activated.connect (() => {
+        match.activated.connect ((callback) => {
             var split_url = url.split ("/");
             var app_info = new GLib.DesktopAppInfo (split_url[split_url.length - 1]);
             try {
                 app_info.launch (null, null);
+                callback (null);
             } catch (Error e) {
-                warning ("FAILED TO LAUNCH APP");
+                callback (e);
             }
         });
         return match;

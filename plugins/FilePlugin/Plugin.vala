@@ -28,10 +28,12 @@ public static TrackerProvider get_provider () {
         }
 
         var match = new Match (match_type, 10, cursor.get_string (0), path, icon, null);
-        match.activated.connect (() => {
+        match.activated.connect ((callback) => {
             try {
                 AppInfo.launch_default_for_uri (url, null);
+                callback (null);
             } catch (Error e) {
+                callback (e);
                 warning ("Failed to launch default app for uri: %s", e.message);
             }
         });
