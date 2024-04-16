@@ -11,7 +11,7 @@ public static TrackerProvider get_provider () {
             var icon_name = split[split.length - 1];
             icon = new ThemedIcon (icon_name);
         }
-        var match = new Match (match_type, 20, cursor.get_string (0), null, icon, null);
+        var match = new SignalMatch (match_type, 20, cursor.get_string (0), null, icon, null);
         var url = cursor.get_string (2);
         match.activated.connect ((callback) => {
             var split_url = url.split ("/");

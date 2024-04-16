@@ -2,10 +2,6 @@ public class Match : Object {
     internal static Gtk.Expression match_type_expression = new Gtk.PropertyExpression (typeof (Match), null, "match-type");
     internal static Gtk.Expression relevancy_expression = new Gtk.PropertyExpression (typeof (Match), null, "relevancy");
 
-    public delegate void ActivationCallback (Error? error);
-
-    public signal void activated (ActivationCallback callback);
-
     public MatchType match_type { get; construct; }
     public int relevancy { get; construct; }
     public string title { get; construct; }
@@ -26,15 +22,6 @@ public class Match : Object {
     }
 
     public virtual async void activate () throws Error {
-        Error? error = null;
-        activated ((e) => {
-            error = e;
-            activate.callback ();
-        });
-        yield;
-
-        if (error != null) {
-            throw error;
-        }
+        warning ("Activated match without implemented activate func");
     }
 }

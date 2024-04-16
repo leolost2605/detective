@@ -58,10 +58,14 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
 
         list_view.activate.connect ((position) => {
-            ((Match) engine.matches.get_item (position)).activated ((error) => {
-                if (error != null) {
-                    warning (error.message);
+            var match = (Match) engine.matches.get_item (position);
+            match.activate.begin ((obj, res) => {
+                try {
+                    match.activate.end (res);
+                } catch (Error e) {
+                    warning (e.message);
                 }
+
                 destroy ();
             });
         });

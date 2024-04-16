@@ -27,7 +27,7 @@ public static TrackerProvider get_provider () {
             icon = ContentType.get_icon (cursor.get_string (2));
         }
 
-        var match = new Match (match_type, 10, cursor.get_string (0), path, icon, null);
+        var match = new SignalMatch (match_type, 10, cursor.get_string (0), path, icon, null);
         match.activated.connect ((callback) => {
             try {
                 AppInfo.launch_default_for_uri (url, null);
