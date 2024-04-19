@@ -73,5 +73,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         entry.activate.connect (() => {
             list_view.activate (selection_model.selected);
         });
+
+        selection_model.items_changed.connect (() => list_view.scroll_to (0, SELECT, null));
     }
 }

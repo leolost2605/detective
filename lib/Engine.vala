@@ -3,6 +3,8 @@
  * Used for implementing frontends.
  */
 public class Detective.Engine : Object {
+    private const int DEFAULT_RESULT_NUMBER = 10;
+
     public Gtk.SortListModel matches { get; construct; }
 
     private ListStore search_providers;
@@ -44,7 +46,7 @@ public class Detective.Engine : Object {
     public void search (string search_term) {
         cancel_current_query ();
 
-        current_query = new Query (search_term);
+        current_query = new Query (search_term, DEFAULT_RESULT_NUMBER);
 
         for (int i = 0; i < search_providers.get_n_items (); i++) {
             ((SearchProvider) search_providers.get_item (i)).search (current_query);
