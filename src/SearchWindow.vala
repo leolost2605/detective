@@ -32,9 +32,22 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             ((MatchRow) list_item.child).bind (item);
         });
 
+        var header_factory = new Gtk.SignalListItemFactory ();
+        header_factory.setup.connect ((obj) => {
+            var list_header = (Gtk.ListHeader) obj;
+            list_header.child = new Granite.HeaderLabel ("");
+        });
+
+        header_factory.bind.connect ((obj) => {
+            var list_header = (Gtk.ListHeader) obj;
+            var item = (Match) list_header.item;
+            ((Granite.HeaderLabel) list_header.child).label = item.match_type.name;
+        });
+
         var list_view = new Gtk.ListView (selection_model, factory) {
             vexpand = true,
-            single_click_activate = true
+            single_click_activate = true,
+            header_factory = header_factory
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
 

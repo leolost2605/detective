@@ -21,13 +21,18 @@ public class Detective.Engine : Object {
 
         var flatten_model = new Gtk.FlattenListModel (map_model);
 
-        var section_sorter = new Gtk.StringSorter (MatchType.expression);
         var relevancy_sorter = new Gtk.NumericSorter (Match.relevancy_expression) {
             sort_order = DESCENDING
         };
 
+        var section_sorter = new Gtk.CustomSorter ((obj1, obj2) => {
+            var match1 = (Match) obj1;
+            var match2 = (Match) obj2;
+            return match1.match_type == match2.match_type ? 0 : 1;
+        });
+
         matches = new Gtk.SortListModel (flatten_model, relevancy_sorter) {
-            //  section_sorter = section_sorter
+            section_sorter = section_sorter
         };
 
         plugin_loader = new PluginLoader ();

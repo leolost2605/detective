@@ -1,7 +1,7 @@
-private static MatchType match_type;
+private static MatchType match_type_apps;
 
 public static TrackerProvider get_provider () {
-    match_type = new MatchType ("tracker", "Tracker");
+    match_type_apps = new MatchType ("tracker-apps", "Applications");
     var query = """SELECT nie:title(?r) nfo:softwareIcon(?r) nie:url(nie:isStoredAs(?r)) { ?r a nfo:SoftwareApplication ; fts:match "%s" } ORDER BY fts:rank(?r)""";
     return new TrackerProvider (query, (cursor) => {
         var str = cursor.get_string (1);
@@ -11,7 +11,7 @@ public static TrackerProvider get_provider () {
             var icon_name = split[split.length - 1];
             icon = new ThemedIcon (icon_name);
         }
-        var match = new SignalMatch (match_type, 20, cursor.get_string (0), null, icon, null);
+        var match = new SignalMatch (match_type_apps, 20, cursor.get_string (0), null, icon, null);
         var url = cursor.get_string (2);
         match.activated.connect ((callback) => {
             var split_url = url.split ("/");
