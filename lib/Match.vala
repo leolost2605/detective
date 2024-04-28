@@ -1,5 +1,4 @@
 public class Match : Object {
-    internal static Gtk.Expression match_type_expression = new Gtk.PropertyExpression (typeof (Match), null, "match-type");
     internal static Gtk.Expression relevancy_expression = new Gtk.PropertyExpression (typeof (Match), null, "relevancy");
 
     public MatchType match_type { get; construct; }

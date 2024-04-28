@@ -1,6 +1,8 @@
 
 // This whole thing is just for testing
 public class TrackerProvider : SearchProvider {
+    public signal void cleared ();
+
     // Needs to have exactly one printf style %s for the search term
     public string query { get; construct; }
 
@@ -37,6 +39,7 @@ public class TrackerProvider : SearchProvider {
 
     internal override void clear () {
         matches_internal.remove_all ();
+        cleared ();
     }
 
     private async void search_tracker () {
@@ -47,15 +50,18 @@ public class TrackerProvider : SearchProvider {
 
             var cursor = yield tracker_statement_id.execute_async (search_query.cancellable);
 
-            matches_internal.remove_all ();
+            clear ();
 
+            Match[] matches = {};
             while (yield cursor.next_async ()) {
                 if (search_query.cancelled) {
                     throw new IOError.CANCELLED ("Search was cancelled");
                 }
+
                 var match = create_match_func (cursor);
-                matches_internal.append (match);
+                matches += match;
             }
+            matches_internal.splice (0, 0, matches);
 
             cursor.close ();
         } catch (Error e) {

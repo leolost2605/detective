@@ -27,7 +27,7 @@ public class Detective.CalculatorProvider : SearchProvider {
 
     construct {
         backend = new CalculatorPluginBackend ();
-        match_type = new MatchType ("calculator", "Calculation");
+        match_type = new MatchType ("Calculation");
         matches_internal = new ListStore (typeof (Match));
         matches = matches_internal;
     }

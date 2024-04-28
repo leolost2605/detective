@@ -28,7 +28,17 @@ public class Detective.Engine : Object {
         var section_sorter = new Gtk.CustomSorter ((obj1, obj2) => {
             var match1 = (Match) obj1;
             var match2 = (Match) obj2;
-            return match1.match_type == match2.match_type ? 0 : 1;
+
+            if (match1.match_type == match2.match_type) {
+                return 0;
+            }
+
+            var diff = match2.match_type.best_match_relevancy - match1.match_type.best_match_relevancy;
+            if (diff != 0) {
+                return diff;
+            }
+
+            return strcmp (match1.match_type.name, match2.match_type.name);
         });
 
         matches = new Gtk.SortListModel (flatten_model, relevancy_sorter) {
