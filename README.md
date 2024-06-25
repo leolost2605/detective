@@ -2,11 +2,11 @@
 
 Run `flatpak-builder` to configure the build environment, download dependencies, build, and install
 
-    flatpak-builder build myapp.yml --user --install --force-clean --install-deps-from=appcenter
+    flatpak-builder build io.github.leolost2605.detective.yml --user --install --force-clean --install-deps-from=appcenter
 
-execute with `io.github.myteam.myapp`
+execute with `io.github.leolost2605.detective`
 
-    flatpak run io.github.myteam.myapp
+    flatpak run io.github.leolost2605.detective
 
 ## What to expect
 
