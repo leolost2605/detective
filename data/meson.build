@@ -9,7 +9,7 @@ i18n.merge_file(
 )
 
 # Validate MetaInfo file
-metainfo_file = 'io.github.leolost2605.detective.appstream.xml.in'
+metainfo_file = meson.current_source_dir() / 'io.github.leolost2605.detective.appdata.xml.in'
 ascli_exe = find_program('appstreamcli', required: false)
 if ascli_exe.found()
   test('validate metainfo file',
