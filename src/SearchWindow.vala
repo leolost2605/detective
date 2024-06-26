@@ -1,5 +1,5 @@
 public class Detective.SearchWindow : Gtk.ApplicationWindow {
-    private Engine engine;
+    public Engine engine { get; construct; }
 
     //Used in signal handlers so make them fields to avoid memory leaks
     private Gtk.SearchEntry entry;
@@ -7,13 +7,11 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
 
-    public SearchWindow (Application app) {
-        Object (application: app);
+    public SearchWindow (Application app, Engine engine) {
+        Object (application: app, engine: engine);
     }
 
     construct {
-        engine = new Engine ();
-
         entry = new Gtk.SearchEntry () {
             margin_top = 6,
             margin_bottom = 6,
@@ -95,9 +93,12 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
         entry.stop_search.connect (destroy);
 
-        selection_model.items_changed.connect (() => Idle.add_once (() => {
+        selection_model.items_changed.connect (() => Idle.add (() => {
             scrolled_window.vadjustment.value = 0;
             selection_model.selected = 0;
+            return Source.REMOVE;
         }));
+
+        weak_ref (engine.clear_search);
     }
 }

@@ -4,6 +4,8 @@
  */
 
 public class Detective.Application : Gtk.Application {
+    private Engine engine;
+
     public Application () {
         Object (
             application_id: "io.github.leolost2605.detective",
@@ -16,6 +18,8 @@ public class Detective.Application : Gtk.Application {
 
         ShellKeyGrabber.init ();
 
+        engine = new Engine ();
+
         hold ();
     }
 
@@ -25,11 +29,12 @@ public class Detective.Application : Gtk.Application {
 
     public void present_window () {
         if (active_window == null) {
-            new SearchWindow (this) {
+            var window = new SearchWindow (this, engine) {
                 default_height = 600,
                 default_width = 800,
                 title = "Detective"
             };
+            window.weak_ref (engine.clear_search);
         }
         active_window.present ();
 
