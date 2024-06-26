@@ -28,10 +28,10 @@ install_data(
 )
 
 # Install our .appdata.xml file so AppCenter will see it
-install_data(
-    'data' / meson.project_name() + '.appdata.xml',
-    install_dir: get_option('datadir') / 'metainfo',
-)
+# install_data(
+#     'data' / meson.project_name() + '.appdata.xml',
+#     install_dir: get_option('datadir') / 'metainfo',
+# )
 
 # Install our icons in all the required sizes
 icon_sizes = ['16', '24', '32', '48', '64', '128']
