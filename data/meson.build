@@ -8,6 +8,19 @@ i18n.merge_file(
     install_dir: get_option('datadir') / 'applications'
 )
 
+# Validate MetaInfo file
+metainfo_file = 'io.github.leolost2605.detective.appstream.xml.in'
+ascli_exe = find_program('appstreamcli', required: false)
+if ascli_exe.found()
+  test('validate metainfo file',
+        ascli_exe,
+        args: ['validate',
+               '--no-net',
+               '--pedantic',
+               metainfo_file]
+  )
+endif
+
 #Translate and install our .metainfo file
 i18n.merge_file(
     input: meson.project_name() + '.appdata.xml.in',

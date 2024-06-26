@@ -2,10 +2,10 @@
 <component type="desktop-application">
   <id>io.github.leolost2605.detective</id>
 
-  <name>MyApp</name>
-  <summary>A catchy tagline</summary>
+  <name>Detective</name>
+  <summary>Quickly search through apps and files</summary>
 
-  <metadata_license>CC0-1.0</metadata_license>
+  <metadata_license>CC-BY-SA-4.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
   <supports>
@@ -16,9 +16,17 @@
 
   <description>
     <p>
-      A quick summary of your app&apos;s main selling points and features. Just a couple sentences per paragraph is best.
+      A macOS spotlight like search tool that allows you to quickly search your desktop. It supports searching and opening apps and files as well as doing quick calculations. For additional convenience it can run in background to always be available via the simple keyboard shortcut Ctrl + Space.
     </p>
   </description>
 
   <launchable type="desktop-id">io.github.leolost2605.detective.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/leolost2605/detective/blob/488ca501f7645baceb5dfd145ea3b506673878f9/data/screenshots/Main.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/leolost2605/detective/blob/c03131fd91241b1391aa354f19b58be0f5f5598f/data/screenshots/Search%20fi.png</image>
+    </screenshot>
+  </screenshots>
 </component>

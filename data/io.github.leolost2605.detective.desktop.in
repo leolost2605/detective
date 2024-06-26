@@ -3,7 +3,7 @@ Version=1.0
 Type=Application
 
 Name=Detective
-Comment=Quickly search for apps and files
+Comment=Quickly search through apps and files
 Categories=Utility;System
 
 Icon=io.github.leolost2605.detective
