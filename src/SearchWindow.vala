@@ -1,6 +1,12 @@
 public class Detective.SearchWindow : Gtk.ApplicationWindow {
     private Engine engine;
 
+    //Used in signal handlers so make them fields to avoid memory leaks
+    private Gtk.SearchEntry entry;
+    private Gtk.SingleSelection selection_model;
+    private Gtk.ListView list_view;
+    private Gtk.ScrolledWindow scrolled_window;
+
     public SearchWindow (Application app) {
         Object (application: app);
     }
@@ -8,14 +14,14 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     construct {
         engine = new Engine ();
 
-        var entry = new Gtk.SearchEntry () {
+        entry = new Gtk.SearchEntry () {
             margin_top = 6,
             margin_bottom = 6,
             margin_start = 6,
             margin_end = 6
         };
 
-        var selection_model = new Gtk.SingleSelection (engine.matches) {
+        selection_model = new Gtk.SingleSelection (engine.matches) {
             autoselect = false,
             can_unselect = true
         };
@@ -44,14 +50,14 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             ((Granite.HeaderLabel) list_header.child).label = item.match_type.name;
         });
 
-        var list_view = new Gtk.ListView (selection_model, factory) {
+        list_view = new Gtk.ListView (selection_model, factory) {
             vexpand = true,
             single_click_activate = true,
             header_factory = header_factory
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
 
-        var scrolled_window = new Gtk.ScrolledWindow () {
+        scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view
         };
 

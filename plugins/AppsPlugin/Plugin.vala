@@ -72,6 +72,8 @@ public class AppsProvider : SearchProvider {
     }
 
     private async void build_cache () {
+        list_store.remove_all ();
+
         foreach (var path in paths) {
             var file = File.new_for_path (path);
 
