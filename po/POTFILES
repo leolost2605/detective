@@ -1,0 +1,6 @@
+data/io.github.leolost2605.detective.appdata.xml.in
+data/io.github.leolost2605.detective.desktop.in
+src/Application.vala
+src/MatchRow.vala
+src/SearchWindow.vala
+src/ShellKeyGrabber.vala

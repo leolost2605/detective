@@ -2,8 +2,8 @@
 Version=1.0
 Type=Application
 
-Name=MyApp
-Comment=A catchy tagline
+Name=Detective
+Comment=Quickly search for apps and files
 Categories=Education;ComputerScience;
 
 Icon=io.github.myteam.myapp

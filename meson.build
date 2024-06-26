@@ -2,6 +2,10 @@
 project('io.github.leolost2605.detective', 'vala', 'c')
 
 pkgconfig = import('pkgconfig')
+i18n = import('i18n')
+
+# Set our translation domain
+add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format (meson.project_name()), language:'c')
 
 subdir('lib')
 subdir('plugins')
@@ -24,29 +28,5 @@ executable(
     install: true
 )
 
-# Install our .desktop file so the Applications Menu will see it
-install_data(
-    'data' / meson.project_name() + '.desktop',
-    install_dir: get_option('datadir') / 'applications'
-)
-
-# Install our .appdata.xml file so AppCenter will see it
-# install_data(
-#     'data' / meson.project_name() + '.appdata.xml',
-#     install_dir: get_option('datadir') / 'metainfo',
-# )
-
-# Install our icons in all the required sizes
-icon_sizes = ['16', '24', '32', '48', '64', '128']
-foreach i : icon_sizes
-    install_data(
-        'data' / i + '.svg',
-        install_dir: get_option('datadir') / 'icons' / 'hicolor' / i + 'x' + i / 'apps',
-        rename: meson.project_name() + '.svg'
-    )
-    install_data(
-        'data' / i + '.svg',
-        install_dir: get_option('datadir') / 'icons' / 'hicolor' / i + 'x' + i + '@2' / 'apps',
-        rename: meson.project_name() + '.svg'
-    )
-endforeach
+subdir('data')
+subdir('po')

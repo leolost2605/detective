@@ -47,7 +47,7 @@ public class Detective.Application : Gtk.Application {
         try {
             if (!yield portal.request_background (
                 parent,
-                "Detective needs to run in the background to be easily invokable via keyboard shortcuts.",
+                _("Detective needs to run in the background to be easily invokable via keyboard shortcuts."),
                 (owned) command,
                 Xdp.BackgroundFlags.AUTOSTART,
                 null
