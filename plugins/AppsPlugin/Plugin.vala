@@ -37,11 +37,11 @@ public class AppMatch : Match {
 }
 
 public class AppsProvider : SearchProvider {
-    private const string[] paths = {
+    private string[] paths = {
         "/run/host/usr/share/applications/",
         "/usr/share/applications/",
         "/var/lib/flatpak/exports/share/applications/",
-        ".local/share/flatpak/exports/share/applications/",
+        Environment.get_home_dir () + "/.local/share/flatpak/exports/share/applications/",
         "/var/lib/snapd/desktop/applications/"
     };
 

@@ -4,13 +4,25 @@
  */
 
 public class Detective.Application : Gtk.Application {
+    private const string BACKGROUND = "background";
+
+    private static bool background;
+
+    private const OptionEntry[] OPTIONS = {
+        { BACKGROUND, 'b', OptionFlags.NONE, OptionArg.NONE, out background, "Launch without showing a window and keep running in background.", },
+    };
+
     private Engine engine;
 
     public Application () {
         Object (
             application_id: "io.github.leolost2605.detective",
-            flags: ApplicationFlags.FLAGS_NONE
+            flags: ApplicationFlags.HANDLES_COMMAND_LINE
         );
+    }
+
+    construct {
+        add_main_option_entries (OPTIONS);
     }
 
     protected override void startup () {
@@ -33,7 +45,18 @@ public class Detective.Application : Gtk.Application {
         hold ();
     }
 
+    protected override int command_line (ApplicationCommandLine command_line) {
+        activate ();
+        return 0;
+    }
+
     protected override void activate () {
+        if (background) {
+            request_background.begin ();
+            background = false;
+            return;
+        }
+
         present_window ();
     }
 
@@ -53,14 +76,13 @@ public class Detective.Application : Gtk.Application {
     private async void request_background () {
         var portal = new Xdp.Portal ();
 
-        Xdp.Parent? parent = active_window != null ? Xdp.parent_new_gtk (active_window) : null;
-
         var command = new GenericArray<weak string> ();
         command.add ("io.github.leolost2605.detective");
+        command.add ("--background");
 
         try {
             if (!yield portal.request_background (
-                parent,
+                null,
                 _("Detective needs to run in the background to be easily invokable via keyboard shortcuts."),
                 (owned) command,
                 Xdp.BackgroundFlags.AUTOSTART,
