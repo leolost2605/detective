@@ -21,15 +21,9 @@ finish-args:
   - '--socket=fallback-x11'
   - '--socket=wayland'
   - '--filesystem=host'
-  - '--filesystem=home'
   - '--filesystem=~/.local/share/flatpak'
   - '--filesystem=/var'
-  - '--filesystem=xdg-data/flatpak/app:ro'
-  - '--filesystem=/var/lib/flatpak/app:ro'
   - '--add-policy=Tracker3.dbus:org.freedesktop.Tracker3.Miner.Files=*'
-  - '--talk-name=org.gtk.vfs.*'
-  - '--filesystem=xdg-run/gvfsd'
-  - '--filesystem=/usr/share/applications/'
   - '--talk-name=org.freedesktop.Flatpak'
 
 # This section is where you list all the source code required to build your app.

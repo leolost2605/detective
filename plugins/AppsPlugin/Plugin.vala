@@ -48,6 +48,8 @@ public class AppsProvider : SearchProvider {
     private ListStore list_store;
     private Query? query;
 
+    private Regex exec_field_codes_regex;
+
     construct {
         AppMatch.match_type_apps = new MatchType ("Applications");
 
@@ -59,6 +61,12 @@ public class AppsProvider : SearchProvider {
         }));
 
         matches = filter_list_model;
+
+        try {
+            exec_field_codes_regex = new Regex ("(?<!%)%.");
+        } catch (Error e) {
+            warning ("Failed to compile regex. This shouldn't be reached: %s", e.message);
+        }
 
         build_cache.begin ();
     }
@@ -98,26 +106,29 @@ public class AppsProvider : SearchProvider {
             return;
         }
 
-        try {
-            if (key_file.get_boolean ("Desktop Entry", "Hidden")) {
-                return;
-            }
-        } catch (Error e) {
-            warning ("Failed to get hidden: %s", e.message);
+        if (!key_file.has_group ("Desktop Entry")) {
+            return;
         }
 
         try {
-            if (key_file.get_boolean ("Desktop Entry", "NoDisplay")) {
+            if (key_file.has_key ("Desktop Entry", "Hidden") && key_file.get_boolean ("Desktop Entry", "Hidden")) {
                 return;
             }
         } catch (Error e) {
-            warning ("Failed to get NoDisplay: %s", e.message);
+            debug ("Failed to check hidden: %s", e.message);
+        }
+
+        try {
+            if (key_file.has_key ("Desktop Entry", "NoDisplay") && key_file.get_boolean ("Desktop Entry", "NoDisplay")) {
+                return;
+            }
+        } catch (Error e) {
+            debug ("Failed to check NoDisplay: %s", e.message);
         }
 
         string? exec = null;
         try {
-            exec = key_file.get_value ("Desktop Entry", "Exec");
-            //Todo filter out field codes (i.e. %u or similar)
+            exec = exec_field_codes_regex.replace (key_file.get_value ("Desktop Entry", "Exec"), -1, 0, "");
         } catch (Error e) {
             warning ("Failed to get exec: %s", e.message);
             return;
@@ -135,7 +146,7 @@ public class AppsProvider : SearchProvider {
         try {
             description = key_file.get_locale_string ("Desktop Entry", "Comment", null);
         } catch (Error e) {
-            warning ("Failed to get name: %s", e.message);
+            debug ("Failed to get description: %s", e.message);
         }
 
         Icon? icon = null;
@@ -149,14 +160,14 @@ public class AppsProvider : SearchProvider {
                 icon = new ThemedIcon (icon_name);
             }
         } catch (Error e) {
-            warning ("Failed to get name: %s", e.message);
+            debug ("Failed to get icon: %s", e.message);
         }
 
         string[]? keywords = null;
         try {
             keywords = key_file.get_locale_string_list ("Desktop Entry", "Keywords", null);
         } catch (Error e) {
-            warning ("Failed to get keywords: %s", e.message);
+            debug ("Failed to get keywords: %s", e.message);
         }
 
         list_store.append (new AppMatch (title, description, icon, exec, keywords));
