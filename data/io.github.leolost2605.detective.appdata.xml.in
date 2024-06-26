@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.myteam.myapp</id>
+  <id>io.github.leolost2605.detective</id>
 
   <name>MyApp</name>
   <summary>A catchy tagline</summary>
@@ -20,5 +20,5 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">io.github.myteam.myapp.desktop</launchable>
+  <launchable type="desktop-id">io.github.leolost2605.detective.desktop</launchable>
 </component>

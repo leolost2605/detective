@@ -6,6 +6,6 @@ Name=Detective
 Comment=Quickly search for apps and files
 Categories=Education;ComputerScience;
 
-Icon=io.github.myteam.myapp
-Exec=io.github.myteam.myapp
+Icon=io.github.leolost2605.detective
+Exec=io.github.leolost2605.detective
 Terminal=false
