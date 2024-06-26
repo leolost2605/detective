@@ -44,7 +44,6 @@ public class Detective.CalculatorPluginBackend : Object {
         foreach (string expr in expressions) {
             bool is_base_expr;
             if (!allowed_expression (expr, out is_base_expr)) {
-                critical ("Invalid expression %s", expr);
                 throw new IOError.FAILED_HANDLED ("Invalid expression");
             }
             // Put base expressions first for reliable output by 'bc'
@@ -63,7 +62,7 @@ public class Detective.CalculatorPluginBackend : Object {
         Pid pid;
         int read_fd, write_fd;
         /* Must include math library to get non-integer results and to access standard math functions */
-        string[] argv = {"bc", "-l"};
+        string[] argv = {"flatpak-spawn", "--host", "bc", "-l"};
 
         Process.spawn_async_with_pipes (
             null, argv, null,
