@@ -1,10 +1,6 @@
 public class AppMatch : Match {
     public static MatchType match_type_apps;
 
-    static construct {
-        match_type_apps = new MatchType ("Applications");
-    }
-
     public string exec { get; construct; }
     public string[]? keywords { get; construct; }
 
@@ -21,6 +17,7 @@ public class AppMatch : Match {
     }
 
     public int set_relevancy (string search_term) {
+        //TODO: Better search algorithm (fuzzy)
         int relevancy = 0;
 
         if (title.down ().contains (search_term.down ())) {
@@ -52,6 +49,8 @@ public class AppsProvider : SearchProvider {
     private Query? query;
 
     construct {
+        AppMatch.match_type_apps = new MatchType ("Applications");
+
         list_store = new ListStore (typeof (AppMatch));
 
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {

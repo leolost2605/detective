@@ -3,6 +3,7 @@ shared_library(
     'Plugin.vala',
     dependencies: [
         lib_dep,
+        dependency('libportal')
     ],
     install: true,
     install_dir: plugin_dir
