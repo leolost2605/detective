@@ -5,8 +5,11 @@
   <name>Detective</name>
   <summary>Quickly search through apps and files</summary>
 
+  <developer>Leonhard</developer>
+
   <metadata_license>CC-BY-SA-4.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
+  <content_rating type="oars-1.1" />
 
   <supports>
     <control>pointing</control>
@@ -29,4 +32,18 @@
       <image>https://github.com/leolost2605/detective/blob/c03131fd91241b1391aa354f19b58be0f5f5598f/data/screenshots/Search%20fi.png</image>
     </screenshot>
   </screenshots>
+
+  <releases>
+    <release version="1.0.0" date="2024-06-27">
+      <description>
+        <p>Initial release!</p>
+        <ul>
+          <li>Search for and open apps</li>
+          <li>Search for files and open them with their default handler</li>
+          <li>Do quick math calculations</li>
+          <li>Launch via keyboard shortcut</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
 </component>
