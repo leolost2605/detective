@@ -88,7 +88,9 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
 
         entry.activate.connect (() => {
-            list_view.activate (selection_model.selected);
+            if (selection_model.selected != Gtk.INVALID_LIST_POSITION) {
+                list_view.activate (selection_model.selected);
+            }
         });
 
         entry.stop_search.connect (destroy);

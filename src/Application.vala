@@ -29,7 +29,7 @@ public class Detective.Application : Gtk.Application {
 
     public void present_window () {
         if (active_window == null) {
-            var window = new SearchWindow (this, engine) {
+            new SearchWindow (this, engine) {
                 default_height = 600,
                 default_width = 800,
                 title = "Detective"
