@@ -6,6 +6,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     private Gtk.SingleSelection selection_model;
     private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
+    private Gtk.Stack stack;
 
     public SearchWindow (Application app, Engine engine) {
         Object (application: app, engine: engine);
@@ -59,10 +60,19 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             child = list_view
         };
 
+        var placeholder = new Granite.Placeholder (_("Start typing to search")) {
+            icon = new ThemedIcon ("system-search")
+        };
+
+        stack = new Gtk.Stack ();
+        stack.add_named (placeholder, "placeholder");
+        stack.add_named (scrolled_window, "list");
+
         var content = new Gtk.Box (VERTICAL, 6);
         content.append (entry);
-        content.append (scrolled_window);
+        content.append (stack);
 
+        resizable = false;
         child = content;
         titlebar = new Gtk.Grid () { visible = false };
 
@@ -98,6 +108,13 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         selection_model.items_changed.connect (() => Idle.add (() => {
             scrolled_window.vadjustment.value = 0;
             selection_model.selected = 0;
+
+            if (selection_model.n_items > 0) {
+                stack.visible_child_name = "list";
+            } else {
+                stack.visible_child_name = "placeholder";
+            }
+
             return Source.REMOVE;
         }));
 
