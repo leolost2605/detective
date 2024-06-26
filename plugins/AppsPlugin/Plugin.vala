@@ -1,47 +1,29 @@
 public class AppMatch : Match {
-    public static MatchType match_type_apps = new MatchType ("Applications");
+    public static MatchType match_type_apps;
 
-    public KeyFile key_file { get; construct; }
+    static construct {
+        match_type_apps = new MatchType ("Applications");
+    }
 
-    public AppMatch (KeyFile key_file) {
+    public string exec { get; construct; }
+    public string[]? keywords { get; construct; }
+
+    public AppMatch (string title, string? description, Icon? icon, string exec, string[]? keywords) {
         Object (
             match_type: match_type_apps,
             relevancy: 0,
-            key_file: key_file
+            title: title,
+            description: description,
+            icon: icon,
+            exec: exec,
+            keywords: keywords
         );
-    }
-
-    construct {
-        try {
-            title = key_file.get_locale_string ("Desktop Entry", "Name", null);
-        } catch (Error e) {
-            warning ("Failed to get name: %s", e.message);
-        }
-
-        try {
-            description = key_file.get_locale_string ("Desktop Entry", "Comment", null);
-        } catch (Error e) {
-            warning ("Failed to get name: %s", e.message);
-        }
-
-        try {
-            var icon_name = key_file.get_string ("Desktop Entry", "Icon");
-
-            var file = File.new_for_path (icon_name);
-            if (file.query_exists ()) {
-                icon = new FileIcon (file);
-            } else {
-                icon = new ThemedIcon (icon_name);
-            }
-        } catch (Error e) {
-            warning ("Failed to get name: %s", e.message);
-        }
     }
 
     public int set_relevancy (string search_term) {
         int relevancy = 0;
 
-        if (title.contains (search_term)) {
+        if (title.down ().contains (search_term.down ())) {
             relevancy = 100;
         }
 
@@ -53,7 +35,7 @@ public class AppMatch : Match {
     }
 
     public override async void activate () throws Error {
-        Process.spawn_command_line_async ("flatpak-spawn --host " + key_file.get_string ("Desktop Entry", "Exec"));
+        Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
     }
 }
 
@@ -117,7 +99,68 @@ public class AppsProvider : SearchProvider {
             return;
         }
 
-        list_store.append (new AppMatch (key_file));
+        try {
+            if (key_file.get_boolean ("Desktop Entry", "Hidden")) {
+                return;
+            }
+        } catch (Error e) {
+            warning ("Failed to get hidden: %s", e.message);
+        }
+
+        try {
+            if (key_file.get_boolean ("Desktop Entry", "NoDisplay")) {
+                return;
+            }
+        } catch (Error e) {
+            warning ("Failed to get NoDisplay: %s", e.message);
+        }
+
+        string? exec = null;
+        try {
+            exec = key_file.get_value ("Desktop Entry", "Exec");
+            //Todo filter out field codes (i.e. %u or similar)
+        } catch (Error e) {
+            warning ("Failed to get exec: %s", e.message);
+            return;
+        }
+
+        string? title = null;
+        try {
+            title = key_file.get_locale_string ("Desktop Entry", "Name", null);
+        } catch (Error e) {
+            warning ("Failed to get name: %s", e.message);
+            return;
+        }
+
+        string? description = null;
+        try {
+            description = key_file.get_locale_string ("Desktop Entry", "Comment", null);
+        } catch (Error e) {
+            warning ("Failed to get name: %s", e.message);
+        }
+
+        Icon? icon = null;
+        try {
+            var icon_name = key_file.get_string ("Desktop Entry", "Icon");
+
+            var file = File.new_for_path (icon_name);
+            if (file.query_exists ()) {
+                icon = new FileIcon (file);
+            } else {
+                icon = new ThemedIcon (icon_name);
+            }
+        } catch (Error e) {
+            warning ("Failed to get name: %s", e.message);
+        }
+
+        string[]? keywords = null;
+        try {
+            keywords = key_file.get_locale_string_list ("Desktop Entry", "Keywords", null);
+        } catch (Error e) {
+            warning ("Failed to get keywords: %s", e.message);
+        }
+
+        list_store.append (new AppMatch (title, description, icon, exec, keywords));
     }
 
     public override void search (Query query) {
@@ -133,37 +176,5 @@ public class AppsProvider : SearchProvider {
 }
 
 public static AppsProvider get_provider () {
-    //  match_type_apps = new MatchType ("Applications");
-    //  var query = """SELECT nie:title(?r) nfo:softwareIcon(?r) nie:url(nie:isStoredAs(?r)) fts:rank(?r) { ?r a nfo:SoftwareApplication ; fts:match "%s" } ORDER BY fts:rank(?r)""";
-    //  var provider = new TrackerProvider (query, (cursor) => {
-    //      var str = cursor.get_string (1);
-    //      Icon? icon = null;
-    //      if (str != null) {
-    //          var split = cursor.get_string (1).split (":");
-    //          var icon_name = split[split.length - 1];
-    //          icon = new ThemedIcon (icon_name);
-    //      }
-
-    //      var match = new SignalMatch (match_type_apps, (int) cursor.get_integer (3) * -100, cursor.get_string (0), null, icon, null);
-
-    //      var url = cursor.get_string (2);
-    //      match.activated.connect ((callback) => {
-    //          var split_url = url.split ("/");
-    //          var app_info = new GLib.DesktopAppInfo (split_url[split_url.length - 1]);
-    //          try {
-    //              app_info.launch (null, null);
-    //              callback (null);
-    //          } catch (Error e) {
-    //              callback (e);
-    //          }
-    //      });
-
-    //      match_type_apps.add_relevancy (match.relevancy);
-
-    //      return match;
-    //  });
-
-    //  provider.cleared.connect (() => match_type_apps.clear_relevancy ());
-
     return new AppsProvider ();
 }
