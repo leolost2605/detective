@@ -5,7 +5,6 @@ sources = [
     'PluginLoader.vala',
     'Query.vala',
     'SearchProvider.vala',
-    'Utils' / 'SignalMatch.vala',
     'Utils' / 'TrackerProvider.vala',
 ]
 
