@@ -12,10 +12,13 @@ executable(
     'src' / 'Application.vala',
     'src' / 'MatchRow.vala',
     'src' / 'SearchWindow.vala',
+    'src' / 'ShellKeyGrabber.vala',
     dependencies: [
         dependency('gtk4'),
         dependency('granite-7'),
         dependency('tracker-sparql-3.0'),
+        dependency('libportal'),
+        dependency('libportal-gtk4'),
         lib_dep
     ],
     install: true

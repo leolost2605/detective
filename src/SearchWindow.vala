@@ -93,6 +93,8 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             list_view.activate (selection_model.selected);
         });
 
+        entry.stop_search.connect (destroy);
+
         selection_model.items_changed.connect (() => Idle.add_once (() => {
             scrolled_window.vadjustment.value = 0;
             selection_model.selected = 0;
