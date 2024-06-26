@@ -34,7 +34,6 @@ public class Detective.Application : Gtk.Application {
                 default_width = 800,
                 title = "Detective"
             };
-            window.weak_ref (engine.clear_search);
         }
         active_window.present ();
 
