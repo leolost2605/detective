@@ -22,14 +22,15 @@
 
 public class Detective.CalculatorProvider : SearchProvider {
     private CalculatorPluginBackend backend;
-    private MatchType match_type;
     private ListStore matches_internal;
 
     construct {
         backend = new CalculatorPluginBackend ();
-        match_type = new MatchType ("Calculation");
         matches_internal = new ListStore (typeof (Match));
-        matches = matches_internal;
+
+        var match_types = new ListStore (typeof (MatchType));
+        match_types.append (new MatchType (_("Calculation"), matches_internal));
+        this.match_types = match_types;
     }
 
     public override void search (Query query) {
@@ -44,7 +45,7 @@ public class Detective.CalculatorProvider : SearchProvider {
             ); // throws error if no valid solution found
 
             var icon = new ThemedIcon ("accessories-calculator");
-            var match = new Match (match_type, 0, d, null, icon, null);
+            var match = new Match ( 0, d, null, icon, null);
 
             matches_internal.remove_all ();
             matches_internal.append (match);

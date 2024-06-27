@@ -1,12 +1,9 @@
 public class AppMatch : Match {
-    public static MatchType match_type_apps;
-
     public string exec { get; construct; }
     public string[]? keywords { get; construct; }
 
     public AppMatch (string title, string? description, Icon? icon, string exec, string[]? keywords) {
         Object (
-            match_type: match_type_apps,
             relevancy: 0,
             title: title,
             description: description,
@@ -41,8 +38,6 @@ public class AppMatch : Match {
 
         this.relevancy = relevancy;
 
-        match_type_apps.add_relevancy (relevancy);
-
         return relevancy;
     }
 
@@ -52,6 +47,8 @@ public class AppMatch : Match {
 }
 
 public class AppsProvider : SearchProvider {
+    public static MatchType match_type_apps;
+
     private string[] paths = {
         "/run/host/usr/share/applications/",
         "/usr/share/applications/",
@@ -66,8 +63,6 @@ public class AppsProvider : SearchProvider {
     private Regex exec_field_codes_regex;
 
     construct {
-        AppMatch.match_type_apps = new MatchType ("Applications");
-
         list_store = new ListStore (typeof (AppMatch));
 
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
@@ -75,7 +70,12 @@ public class AppsProvider : SearchProvider {
             return query != null ? match.set_relevancy (query.search_term) > 0 : false;
         }));
 
-        matches = filter_list_model;
+        match_type_apps = new MatchType ("Applications", filter_list_model);
+
+        var match_types_list_store = new ListStore (typeof (MatchType));
+        match_types_list_store.append (match_type_apps);
+
+        match_types = match_types_list_store;
 
         try {
             exec_field_codes_regex = new Regex ("(?<!%)%.");
@@ -198,7 +198,6 @@ public class AppsProvider : SearchProvider {
     public override void clear () {
         this.query = null;
         list_store.items_changed (0, list_store.n_items, list_store.n_items);
-        AppMatch.match_type_apps.clear_relevancy ();
     }
 }
 

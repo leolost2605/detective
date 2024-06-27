@@ -13,24 +13,33 @@ public class MatchType : Object {
      */
     public int best_match_relevancy { get; private set; }
 
-    public MatchType (string name) {
-        Object (name: name);
+    /**
+     * The matches that belong to this match type.
+     */
+    public ListModel results { get; construct; }
+
+    public MatchType (string name, ListModel results) {
+        var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Match), null, "relevancy")) {
+            sort_order = DESCENDING
+        };
+
+        var sort_model = new Gtk.SortListModel (results, relevancy_sorter);
+
+        Object (name: name, results: sort_model);
     }
 
-    /**
-     * If the added relevancy is better than the current
-     * best relevancy it will be updated.
-     */
-    public void add_relevancy (int relevancy) {
-        if (relevancy > best_match_relevancy) {
-            best_match_relevancy = relevancy;
+    construct {
+        results.items_changed.connect (on_items_changed);
+    }
+
+    private void on_items_changed (uint position, uint removed, uint added) {
+        for (uint i = position; i < position + added; i++) {
+            var match = (Match) results.get_item (i);
+            match.match_type_name = name;
         }
-    }
 
-    /**
-     * Resets the best relevancy to 0.
-     */
-    public void clear_relevancy () {
-        best_match_relevancy = 0;
+        if (position == 0) {
+            best_match_relevancy = results.get_n_items () > 0 ? ((Match) results.get_item (0)).relevancy : 0;
+        }
     }
 }

@@ -1,5 +1,5 @@
 public abstract class SearchProvider : Object {
-    public ListModel matches { get; set; }
+    public ListModel match_types { get; set; }
 
     /**
      * Called when the search term changes. The SearchProvider implementation

@@ -5,7 +5,7 @@
 public class Detective.Engine : Object {
     private const int DEFAULT_RESULT_NUMBER = 10;
 
-    public Gtk.SortListModel matches { get; construct; }
+    public ListModel matches { get; construct; }
 
     private ListStore search_providers;
     private PluginLoader plugin_loader;
@@ -16,34 +16,20 @@ public class Detective.Engine : Object {
         search_providers = new ListStore (typeof (SearchProvider));
 
         var map_model = new Gtk.MapListModel (search_providers, (obj) => {
-            return ((SearchProvider) obj).matches;
+            return ((SearchProvider) obj).match_types;
         });
 
         var flatten_model = new Gtk.FlattenListModel (map_model);
 
-        var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Match), null, "relevancy")) {
-            sort_order = DESCENDING
-        };
+        var match_type_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (MatchType), null, "best-match-relevancy"));
 
-        var section_sorter = new Gtk.CustomSorter ((obj1, obj2) => {
-            var match1 = (Match) obj1;
-            var match2 = (Match) obj2;
+        var match_type_sort_model = new Gtk.SortListModel (flatten_model, match_type_sorter);
 
-            if (match1.match_type == match2.match_type) {
-                return 0;
-            }
-
-            var diff = match2.match_type.best_match_relevancy - match1.match_type.best_match_relevancy;
-            if (diff != 0) {
-                return diff;
-            }
-
-            return strcmp (match1.match_type.name, match2.match_type.name);
+        var match_model = new Gtk.MapListModel (match_type_sort_model, (obj) => {
+            return ((MatchType) obj).results;
         });
 
-        matches = new Gtk.SortListModel (flatten_model, relevancy_sorter) {
-            section_sorter = section_sorter
-        };
+        matches = new Gtk.FlattenListModel (match_model);
 
         plugin_loader = new PluginLoader ();
 

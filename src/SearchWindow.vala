@@ -46,7 +46,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         header_factory.bind.connect ((obj) => {
             var list_header = (Gtk.ListHeader) obj;
             var item = (Match) list_header.item;
-            ((Granite.HeaderLabel) list_header.child).label = item.match_type.name;
+            ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
         });
 
         list_view = new Gtk.ListView (selection_model, factory) {
@@ -105,19 +105,27 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
         entry.stop_search.connect (destroy);
 
-        selection_model.items_changed.connect (() => Idle.add (() => {
-            scrolled_window.vadjustment.value = 0;
-            selection_model.selected = 0;
+        selection_model.items_changed.connect (() => {
+            update_vadjustment ();
 
-            if (selection_model.n_items > 0) {
-                stack.visible_child_name = "list";
-            } else {
-                stack.visible_child_name = "placeholder";
-            }
-
-            return Source.REMOVE;
-        }));
+            ulong handler = 0;
+            handler = scrolled_window.vadjustment.value_changed.connect (() => {
+                update_vadjustment ();
+                scrolled_window.vadjustment.disconnect (handler);
+            });
+        });
 
         weak_ref (engine.clear_search);
+    }
+
+    private void update_vadjustment () {
+        scrolled_window.vadjustment.value = 0;
+        selection_model.selected = 0;
+
+        if (selection_model.n_items > 0) {
+            stack.visible_child_name = "list";
+        } else {
+            stack.visible_child_name = "placeholder";
+        }
     }
 }
