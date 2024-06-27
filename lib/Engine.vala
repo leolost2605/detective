@@ -21,7 +21,7 @@ public class Detective.Engine : Object {
 
         var flatten_model = new Gtk.FlattenListModel (map_model);
 
-        var relevancy_sorter = new Gtk.NumericSorter (Match.relevancy_expression) {
+        var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Match), null, "relevancy")) {
             sort_order = DESCENDING
         };
 

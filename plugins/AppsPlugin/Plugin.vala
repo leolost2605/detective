@@ -20,8 +20,23 @@ public class AppMatch : Match {
         //TODO: Better search algorithm (fuzzy)
         int relevancy = 0;
 
-        if (title.down ().contains (search_term.down ())) {
-            relevancy = 100;
+        var downed_search_term = search_term.down ();
+
+        if (title.down ().contains (downed_search_term)) {
+            if (title.down ().has_prefix (downed_search_term)) {
+                relevancy = 100;
+            } else {
+                relevancy = 90;
+            }
+        } else if (description != null && description.down ().contains (downed_search_term)) {
+            relevancy = 75;
+        } else if (keywords != null) {
+            foreach (unowned var keyword in keywords) {
+                if (keyword.down ().contains (downed_search_term)) {
+                    relevancy = 50;
+                    break;
+                }
+            }
         }
 
         this.relevancy = relevancy;

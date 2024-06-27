@@ -1,6 +1,4 @@
 public class Match : Object {
-    internal static Gtk.Expression relevancy_expression = new Gtk.PropertyExpression (typeof (Match), null, "relevancy");
-
     public MatchType match_type { get; construct set; default = new MatchType ("Unknown MatchType"); }
     public int relevancy { get; construct set; default = 0; }
     public string title { get; construct set; default = "Unknown Match"; }
@@ -21,6 +19,6 @@ public class Match : Object {
     }
 
     public virtual async void activate () throws Error {
-        warning ("Activated match without implemented activate func");
+        debug ("Activated match without activate func");
     }
 }
