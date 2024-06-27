@@ -56,8 +56,13 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
 
+        var view_port = new Gtk.Viewport (null, null) {
+            child = list_view,
+            scroll_to_focus = false
+        };
+
         scrolled_window = new Gtk.ScrolledWindow () {
-            child = list_view
+            child = view_port
         };
 
         var placeholder = new Granite.Placeholder (_("Start typing to search")) {
@@ -105,15 +110,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
         entry.stop_search.connect (destroy);
 
-        selection_model.items_changed.connect (() => {
-            update_vadjustment ();
-
-            ulong handler = 0;
-            handler = scrolled_window.vadjustment.value_changed.connect (() => {
-                update_vadjustment ();
-                scrolled_window.vadjustment.disconnect (handler);
-            });
-        });
+        selection_model.items_changed.connect (update_vadjustment);
 
         weak_ref (engine.clear_search);
     }
