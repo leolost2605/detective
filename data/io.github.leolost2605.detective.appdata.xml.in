@@ -5,7 +5,15 @@
   <name>Detective</name>
   <summary>Quickly search through apps and files</summary>
 
-  <developer>Leonhard</developer>
+  <developer>
+    <id>io.github.leolost2605</id>
+    <name>Leonhard</name>
+  </developer>
+
+  <url type="homepage">https://github.com/leolost2605/detective</url>
+  <url type="bugtracker">https://github.com/leolost2605/detective/issues</url>
+  <url type="donation">https://github.com/sponsors/leolost2605</url>
+  <url type="contribute">https://github.com/leolost2605/detective/pulls</url>
 
   <metadata_license>CC-BY-SA-4.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
