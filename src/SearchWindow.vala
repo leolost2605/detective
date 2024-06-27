@@ -110,12 +110,12 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
         entry.stop_search.connect (destroy);
 
-        selection_model.items_changed.connect (update_vadjustment);
+        selection_model.items_changed.connect (() => Idle.add (update_vadjustment));
 
         weak_ref (engine.clear_search);
     }
 
-    private void update_vadjustment () {
+    private bool update_vadjustment () {
         scrolled_window.vadjustment.value = 0;
         selection_model.selected = 0;
 
@@ -124,5 +124,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         } else {
             stack.visible_child_name = "placeholder";
         }
+
+        return Source.REMOVE;
     }
 }
