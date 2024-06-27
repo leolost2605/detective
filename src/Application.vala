@@ -63,7 +63,7 @@ public class Detective.Application : Gtk.Application {
     public void present_window () {
         if (active_window == null) {
             new SearchWindow (this, engine) {
-                default_height = 600,
+                default_height = 500,
                 default_width = 900,
                 title = "Detective"
             };
