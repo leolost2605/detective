@@ -29,15 +29,25 @@
     <p>
       A macOS spotlight like search tool that allows you to quickly search your desktop. It supports searching and opening apps and files as well as doing quick calculations. For additional convenience it can run in background to always be available via the simple keyboard shortcut Ctrl + Space.
     </p>
+    <p>Features:</p>
+    <ul>
+      <li>Search for and open applications</li>
+      <li>Search for files and open them in the right apps</li>
+      <li>Do quick maths just by typing an expression</li>
+      <li>Run in background and quickly launch with Ctrl + Space or Super + l</li>
+    </ul>
+    <p>
+      Detective requires advanced permissions to properly find and launch applications on the host system. For this reason and for your information warnings might be shown on the app page in your app store.
+    </p>
   </description>
 
   <launchable type="desktop-id">io.github.leolost2605.detective.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/leolost2605/detective/blob/488ca501f7645baceb5dfd145ea3b506673878f9/data/screenshots/Main.png</image>
+      <image>https://github.com/leolost2605/detective/blob/d7511080d724dd81fdb430c0bde9d7748654dec5/data/screenshots/Main.png</image>
     </screenshot>
     <screenshot>
-      <image>https://github.com/leolost2605/detective/blob/c03131fd91241b1391aa354f19b58be0f5f5598f/data/screenshots/Search%20fi.png</image>
+      <image>https://github.com/leolost2605/detective/blob/d7511080d724dd81fdb430c0bde9d7748654dec5/data/screenshots/Search%20fi.png</image>
     </screenshot>
   </screenshots>
 
