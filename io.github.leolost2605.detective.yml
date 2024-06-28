@@ -26,6 +26,7 @@ finish-args:
   - '--add-policy=Tracker3.dbus:org.freedesktop.Tracker3.Miner.Files=*'
   - '--talk-name=org.freedesktop.Flatpak'
   - '--talk-name=org.gnome.Shell'
+  - '--talk-name=org.pantheon.gala'
 
 # This section is where you list all the source code required to build your app.
 # If we had external dependencies that weren't included in our SDK, we would list

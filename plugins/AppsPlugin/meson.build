@@ -1,6 +1,9 @@
 shared_library(
     'AppsPlugin',
-    'Plugin.vala',
+    sources: [
+        'Plugin.vala',
+        'DesktopIntegration.vala'
+    ],
     dependencies: [
         lib_dep,
     ],

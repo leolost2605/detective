@@ -1,10 +1,12 @@
 public class AppMatch : Match {
+    public string app_id { get; construct; }
     public string exec { get; construct; }
     public string[]? keywords { get; construct; }
 
-    public AppMatch (string title, string? description, Icon? icon, string exec, string[]? keywords) {
+    public AppMatch (string app_id, string title, string? description, Icon? icon, string exec, string[]? keywords) {
         Object (
             relevancy: 0,
+            app_id: app_id,
             title: title,
             description: description,
             icon: icon,
@@ -42,6 +44,14 @@ public class AppMatch : Match {
     }
 
     public override async void activate () throws Error {
+        var desktop_integration = yield DesktopIntegration.get_instance ();
+        foreach (var window in yield desktop_integration.get_windows ()) {
+            if (window.properties["app-id"].get_string () == app_id) {
+                yield desktop_integration.focus_window (window.uid);
+                return;
+            }
+        }
+
         Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
     }
 }
@@ -89,6 +99,7 @@ public class AppsProvider : SearchProvider {
     private async void build_cache () {
         list_store.remove_all ();
 
+        //TODO: Use paths as specified by spec and support subpaths
         foreach (var path in paths) {
             var file = File.new_for_path (path);
 
@@ -187,7 +198,7 @@ public class AppsProvider : SearchProvider {
             debug ("Failed to get keywords: %s", e.message);
         }
 
-        list_store.append (new AppMatch (title, description, icon, exec, keywords));
+        list_store.append (new AppMatch (Path.get_basename (path), title, description, icon, exec, keywords));
     }
 
     public override void search (Query query) {
