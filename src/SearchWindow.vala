@@ -55,6 +55,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             header_factory = header_factory
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
+        list_view.add_css_class (Granite.STYLE_CLASS_BACKGROUND);
 
         var view_port = new Gtk.Viewport (null, null) {
             child = list_view,
