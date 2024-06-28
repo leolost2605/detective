@@ -23,9 +23,9 @@ public class AppMatch : Match {
 
         if (title.down ().contains (downed_search_term)) {
             if (title.down ().has_prefix (downed_search_term)) {
-                relevancy = 100;
-            } else {
                 relevancy = 90;
+            } else {
+                relevancy = 80;
             }
         } else if (description != null && description.down ().contains (downed_search_term)) {
             relevancy = 75;
@@ -38,12 +38,18 @@ public class AppMatch : Match {
             }
         }
 
+        if (relevancy > 0) {
+            relevancy += + (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * 10);
+        }
+
         this.relevancy = relevancy;
 
         return relevancy;
     }
 
     public override async void activate () throws Error {
+        RelevancyService.get_default ().app_launched (app_id);
+
         var desktop_integration = yield DesktopIntegration.get_instance ();
         foreach (var window in yield desktop_integration.get_windows ()) {
             if (window.properties["app-id"].get_string () == app_id) {
@@ -73,6 +79,8 @@ public class AppsProvider : SearchProvider {
     private Regex exec_field_codes_regex;
 
     construct {
+        RelevancyService.get_default (); // Init file loading
+
         list_store = new ListStore (typeof (AppMatch));
 
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
