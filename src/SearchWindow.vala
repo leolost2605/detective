@@ -101,6 +101,12 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
                 destroy ();
             });
+
+            //In case match activation takes to long
+            Timeout.add_seconds (3, () => {
+                destroy ();
+                return Source.REMOVE;
+            });
         });
 
         entry.activate.connect (() => {
