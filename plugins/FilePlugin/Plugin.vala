@@ -45,7 +45,7 @@ public static TrackerProvider get_provider () {
             icon = new ThemedIcon ("unknown");
         }
 
-        return new FileMatch ((int) cursor.get_integer (3) * -100, cursor.get_string (0), path, icon, url);
+        return new FileMatch ((int) cursor.get_integer (3) * 10, cursor.get_string (0), path, icon, url);
     });
 
     return provider;

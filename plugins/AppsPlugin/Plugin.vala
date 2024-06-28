@@ -17,6 +17,9 @@ public class AppMatch : Match {
 
     public int set_relevancy (string search_term) {
         //TODO: Better search algorithm (fuzzy)
+        // Also this just grew as I thought of new things so some more considerations should be put into
+        // some things. E.g. how do we weight the relevancy from times launched? Should it be more than 1/10? Probably
+
         int relevancy = 0;
 
         var downed_search_term = search_term.down ();
