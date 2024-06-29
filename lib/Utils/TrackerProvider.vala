@@ -33,6 +33,7 @@ public class TrackerProvider : SearchProvider {
         try {
             tracker_connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null, null);
         } catch (Error e) {
+            // TODO: Maybe send notification?
             warning (e.message);
         }
     }

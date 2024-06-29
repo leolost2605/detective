@@ -26,6 +26,7 @@ public static TrackerProvider get_provider () {
                 fts:match "%s"
             }
         } ORDER BY fts:rank(?r)
+          LIMIT 50
     """;
 
     var provider = new TrackerProvider (query, _("Files"), (cursor) => {
