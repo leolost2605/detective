@@ -81,6 +81,8 @@ public class AppsProvider : SearchProvider {
 
     private Regex exec_field_codes_regex;
 
+    private FileMonitor[] file_monitors = {};
+
     construct {
         RelevancyService.get_default (); // Init file loading
 
@@ -149,6 +151,24 @@ public class AppsProvider : SearchProvider {
                 }
             } catch (Error e) {
                 warning ("Failed to enumerate children of path %s: %s", file.get_path (), e.message);
+            }
+
+            try {
+                var monitor = file.monitor (NONE);
+
+                monitor.changed.connect ((file, other_file, event) => {
+                    if (event == CREATED) {
+                        validate_appinfo.begin (file.get_path ());
+                    }
+
+                    if (event == DELETED) {
+                        //TODO
+                    }
+                });
+
+                file_monitors += monitor;
+            } catch (Error e) {
+                warning ("Failed to monitor directory at path %s: %s", file.get_path (), e.message);
             }
         }
     }
