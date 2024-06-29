@@ -69,12 +69,12 @@ public class AppsProvider : SearchProvider {
     public static MatchType match_type_apps;
 
     private string[] paths = {
-        "/run/host/usr/share/applications/",
-        "/usr/share/applications/",
-        "/var/lib/flatpak/exports/share/applications/",
-        Environment.get_home_dir () + "/.local/share/flatpak/exports/share/applications/",
-        "/var/lib/snapd/desktop/applications/"
+        Environment.get_home_dir () + "/.local/share/flatpak/exports/share",
+        "/var/lib/flatpak/exports/share",
+        "/var/lib/snapd/desktop"
     };
+
+    private GenericSet<string> found_desktop_ids = new GenericSet<string> (str_hash, str_equal);
 
     private ListStore list_store;
     private Query? query;
@@ -117,25 +117,40 @@ public class AppsProvider : SearchProvider {
         search_path += "/run/host/usr/local/share/pixmaps";
         icon_theme.search_path = search_path;
 
+        // Make sure preferred entries come first here
+        paths += Environment.get_user_data_dir ();
+        foreach (var dir in Environment.get_system_data_dirs ()) {
+            if (dir.has_prefix ("/usr")) {
+                paths += "/run/host" + dir; // /usr dirs aren't available from the sandbox
+            } else {
+                paths += dir;
+            }
+        }
+
         build_cache.begin ();
     }
 
     private async void build_cache () {
+        found_desktop_ids.remove_all ();
         list_store.remove_all ();
 
-        //TODO: Use paths as specified by spec and support subpaths
+        //TODO: support subpaths
         foreach (var path in paths) {
-            var file = File.new_for_path (path);
+            var file = File.new_build_filename (path, "applications");
+
+            if (!file.query_exists ()) {
+                continue;
+            }
 
             try {
                 var enumerator = yield file.enumerate_children_async ("standard::*", NOFOLLOW_SYMLINKS, Priority.DEFAULT, null);
 
                 FileInfo? info = null;
                 while ((info = enumerator.next_file (null)) != null) {
-                    yield validate_appinfo (Path.build_filename (path, info.get_name ()));
+                    yield validate_appinfo (Path.build_filename (file.get_path (), info.get_name ()));
                 }
             } catch (Error e) {
-                warning ("Failed to enumerate children of path %s: %s", path, e.message);
+                warning ("Failed to enumerate children of path %s: %s", file.get_path (), e.message);
             }
         }
     }
@@ -162,6 +177,12 @@ public class AppsProvider : SearchProvider {
             return;
         }
 
+        var app_id = Path.get_basename (path);
+
+        if (app_id in found_desktop_ids) {
+            return;
+        }
+
         try {
             if (key_file.has_key ("Desktop Entry", "Hidden") && key_file.get_boolean ("Desktop Entry", "Hidden")) {
                 return;
@@ -176,6 +197,32 @@ public class AppsProvider : SearchProvider {
             }
         } catch (Error e) {
             debug ("Failed to check NoDisplay: %s", e.message);
+        }
+
+        try {
+            if (key_file.has_key ("Desktop Entry", "OnlyShowIn")) {
+                var desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
+                var only_show_in = key_file.get_string ("Desktop Entry", "OnlyShowIn");
+
+                if (only_show_in != desktop) {
+                    return;
+                }
+            }
+        } catch (Error e) {
+            debug ("Failed to check OnlyShowIn: %s", e.message);
+        }
+
+        try {
+            if (key_file.has_key ("Desktop Entry", "NotShowIn")) {
+                var desktop = Environment.get_variable ("XDG_CURRENT_DESKTOP");
+                var only_show_in = key_file.get_string ("Desktop Entry", "NotShowIn");
+
+                if (only_show_in == desktop) {
+                    return;
+                }
+            }
+        } catch (Error e) {
+            debug ("Failed to check NotShowIn: %s", e.message);
         }
 
         string? exec = null;
@@ -229,7 +276,8 @@ public class AppsProvider : SearchProvider {
             debug ("Failed to get keywords: %s", e.message);
         }
 
-        list_store.append (new AppMatch (Path.get_basename (path), title, description, icon, exec, keywords));
+        list_store.append (new AppMatch (app_id, title, description, icon, exec, keywords));
+        found_desktop_ids.add (app_id);
     }
 
     public override void search (Query query) {
