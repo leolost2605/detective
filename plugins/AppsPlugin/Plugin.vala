@@ -104,6 +104,14 @@ public class AppsProvider : SearchProvider {
             warning ("Failed to compile regex. This shouldn't be reached: %s", e.message);
         }
 
+        // Not entirely sure how this works but the Gtk.IconTheme here doesn't search in the directories containing
+        // flatpak app icons. Therefore add them manually.
+        var icon_theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
+        var search_path = icon_theme.search_path;
+        search_path += Environment.get_home_dir () + "/.local/share/flatpak/exports/share/icons";
+        search_path += "/var/lib/flatpak/exports/share/icons";
+        icon_theme.search_path = search_path;
+
         build_cache.begin ();
     }
 
@@ -192,9 +200,16 @@ public class AppsProvider : SearchProvider {
         try {
             var icon_name = key_file.get_string ("Desktop Entry", "Icon");
 
-            var file = File.new_for_path (icon_name);
-            if (file.query_exists ()) {
-                icon = new FileIcon (file);
+            if (icon_name.strip ().has_prefix ("/")) {
+                if (icon_name.has_prefix ("/usr")) {
+                    icon_name = Path.build_filename ("/run/host", icon_name);
+                }
+
+                var file = File.new_for_path (icon_name);
+
+                if (file.query_exists ()) {
+                    icon = new FileIcon (file);
+                }
             } else {
                 icon = new ThemedIcon (icon_name);
             }
