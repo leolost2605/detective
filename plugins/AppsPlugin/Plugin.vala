@@ -93,7 +93,7 @@ public class AppsProvider : SearchProvider {
             return query != null ? match.set_relevancy (query.search_term) > 0 : false;
         }));
 
-        match_type_apps = new MatchType ("Applications", filter_list_model);
+        match_type_apps = new MatchType (_("Applications"), filter_list_model);
 
         var match_types_list_store = new ListStore (typeof (MatchType));
         match_types_list_store.append (match_type_apps);
@@ -136,50 +136,62 @@ public class AppsProvider : SearchProvider {
 
         //TODO: support subpaths
         foreach (var path in paths) {
-            var file = File.new_build_filename (path, "applications");
-
-            if (!file.query_exists ()) {
-                continue;
-            }
-
-            try {
-                var enumerator = yield file.enumerate_children_async ("standard::*", NOFOLLOW_SYMLINKS, Priority.DEFAULT, null);
-
-                FileInfo? info = null;
-                while ((info = enumerator.next_file (null)) != null) {
-                    yield validate_appinfo (Path.build_filename (file.get_path (), info.get_name ()));
-                }
-            } catch (Error e) {
-                warning ("Failed to enumerate children of path %s: %s", file.get_path (), e.message);
-            }
-
-            try {
-                var monitor = file.monitor (NONE);
-
-                monitor.changed.connect ((file, other_file, event) => {
-                    if (event == CREATED) {
-                        validate_appinfo.begin (file.get_path ());
-                    }
-
-                    if (event == DELETED) {
-                        //TODO
-                    }
-                });
-
-                file_monitors += monitor;
-            } catch (Error e) {
-                warning ("Failed to monitor directory at path %s: %s", file.get_path (), e.message);
-            }
+            yield check_directory (File.new_build_filename (path, "applications"));
         }
     }
 
-    private async void validate_appinfo (string path) {
+    private async void check_directory (File dir) {
+        if (!dir.query_exists ()) {
+            return;
+        }
+
+        try {
+            var enumerator = yield dir.enumerate_children_async ("standard::*", NOFOLLOW_SYMLINKS, Priority.DEFAULT, null);
+
+            FileInfo? info = null;
+            while ((info = enumerator.next_file (null)) != null) {
+                var child = File.new_build_filename (dir.get_path (), info.get_name ());
+
+                if (info.get_file_type () == DIRECTORY) {
+                    yield check_directory (child);
+                } else {
+                    yield validate_appinfo (child);
+                }
+            }
+        } catch (Error e) {
+            warning ("Failed to enumerate children of path %s: %s", dir.get_path (), e.message);
+        }
+
+        try {
+            var monitor = dir.monitor (NONE);
+
+            monitor.changed.connect ((file, other_file, event) => {
+                if (event == CREATED) {
+                    if (file.query_file_type (NONE, null) == DIRECTORY) {
+                        check_directory.begin (file);
+                    } else {
+                        validate_appinfo.begin (file);
+                    }
+                }
+
+                if (event == DELETED) {
+                    //TODO
+                }
+            });
+
+            file_monitors += monitor;
+        } catch (Error e) {
+            warning ("Failed to monitor directory at path %s: %s", dir.get_path (), e.message);
+        }
+    }
+
+    // TODO: Properly handle subpaths
+    private async void validate_appinfo (File file) {
         Bytes bytes;
         try {
-            File file = File.new_for_path (path);
             bytes = yield file.load_bytes_async (null, null);
         } catch (Error e) {
-            warning ("Failed to load file %s: %s", path, e.message);
+            warning ("Failed to load file %s: %s", file.get_path (), e.message);
             return;
         }
 
@@ -187,7 +199,7 @@ public class AppsProvider : SearchProvider {
         try {
             key_file.load_from_bytes (bytes, NONE);
         } catch (Error e) {
-            warning ("Failed to parse desktop file %s: %s", path, e.message);
+            warning ("Failed to parse desktop file %s: %s", file.get_path (), e.message);
             return;
         }
 
@@ -195,7 +207,7 @@ public class AppsProvider : SearchProvider {
             return;
         }
 
-        var app_id = Path.get_basename (path);
+        var app_id = file.get_basename ();
 
         if (app_id in found_desktop_ids) {
             return;
@@ -275,10 +287,10 @@ public class AppsProvider : SearchProvider {
                     icon_name = Path.build_filename ("/run/host", icon_name);
                 }
 
-                var file = File.new_for_path (icon_name);
+                var icon_file = File.new_for_path (icon_name);
 
-                if (file.query_exists ()) {
-                    icon = new FileIcon (file);
+                if (icon_file.query_exists ()) {
+                    icon = new FileIcon (icon_file);
                 }
             } else {
                 icon = new ThemedIcon (icon_name);
