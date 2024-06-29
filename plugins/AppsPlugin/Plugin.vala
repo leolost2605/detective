@@ -105,11 +105,16 @@ public class AppsProvider : SearchProvider {
         }
 
         // Not entirely sure how this works but the Gtk.IconTheme here doesn't search in the directories containing
-        // flatpak app icons. Therefore add them manually.
+        // flatpak app icons and some others. Therefore add them manually. Might be too many but better safe than sorry.
         var icon_theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
         var search_path = icon_theme.search_path;
         search_path += Environment.get_home_dir () + "/.local/share/flatpak/exports/share/icons";
         search_path += "/var/lib/flatpak/exports/share/icons";
+        search_path += "/home/leonhard/.local/share/icons";
+        search_path += "/run/host/usr/share/icons";
+        search_path += "/run/host/usr/share/pixmaps";
+        search_path += "/run/host/usr/local/share/icons";
+        search_path += "/run/host/usr/local/share/pixmaps";
         icon_theme.search_path = search_path;
 
         build_cache.begin ();
