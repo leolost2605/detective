@@ -26,23 +26,23 @@ public class AppMatch : Match {
 
         if (title.down ().contains (downed_search_term)) {
             if (title.down ().has_prefix (downed_search_term)) {
-                relevancy = 90;
+                relevancy = 50;
             } else {
-                relevancy = 80;
+                relevancy = 45;
             }
         } else if (description != null && description.down ().contains (downed_search_term)) {
-            relevancy = 75;
+            relevancy = 5;
         } else if (keywords != null) {
             foreach (unowned var keyword in keywords) {
                 if (keyword.down ().contains (downed_search_term)) {
-                    relevancy = 50;
+                    relevancy = 1;
                     break;
                 }
             }
         }
 
         if (relevancy > 0) {
-            relevancy += + (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * 10);
+            relevancy += + (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * 50);
         }
 
         this.relevancy = relevancy;
