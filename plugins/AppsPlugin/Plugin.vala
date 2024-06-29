@@ -109,7 +109,7 @@ public class AppsProvider : SearchProvider {
         var icon_theme = Gtk.IconTheme.get_for_display (Gdk.Display.get_default ());
         icon_theme.add_search_path (Environment.get_home_dir () + "/.local/share/flatpak/exports/share/icons");
         icon_theme.add_search_path ("/var/lib/flatpak/exports/share/icons");
-        icon_theme.add_search_path ("/home/leonhard/.local/share/icons");
+        icon_theme.add_search_path (Environment.get_home_dir () + "/.local/share/icons");
         icon_theme.add_search_path ("/run/host/usr/share/icons");
         icon_theme.add_search_path ("/run/host/usr/share/pixmaps");
         icon_theme.add_search_path ("/run/host/usr/local/share/icons");
