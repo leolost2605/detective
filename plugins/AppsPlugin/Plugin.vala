@@ -291,9 +291,13 @@ public class AppsProvider : SearchProvider {
 
                 if (icon_file.query_exists ()) {
                     icon = new FileIcon (icon_file);
+                } else {
+                    icon = new ThemedIcon ("application-default-icon");
                 }
-            } else {
+            } else if (Gtk.IconTheme.get_for_display (Gdk.Display.get_default ()).has_icon (icon_name)) {
                 icon = new ThemedIcon (icon_name);
+            } else {
+                icon = new ThemedIcon ("application-default-icon");
             }
         } catch (Error e) {
             debug ("Failed to get icon: %s", e.message);
