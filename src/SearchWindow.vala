@@ -101,12 +101,6 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
                 hide ();
             });
-
-            //In case match activation takes to long
-            Timeout.add_seconds (3, () => {
-                hide ();
-                return Source.REMOVE;
-            });
         });
 
         entry.activate.connect (() => {
@@ -116,6 +110,18 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
 
         entry.stop_search.connect (hide);
+
+        var key_controller = new Gtk.EventControllerKey ();
+        key_controller.key_pressed.connect ((keyval, keycode) => {
+            if (keyval == Gdk.Key.Escape) {
+                hide ();
+                return Gdk.EVENT_STOP;
+            }
+
+            return Gdk.EVENT_PROPAGATE;
+        });
+
+        child.add_controller (key_controller);
 
         selection_model.items_changed.connect (() => Idle.add (update_vadjustment));
 
