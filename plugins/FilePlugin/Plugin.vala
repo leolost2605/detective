@@ -12,9 +12,7 @@ public class FileMatch : Match {
     }
 
     public override async void activate () throws Error {
-        // This works where UriLauncher doesn't however make sure this continues working and
-        // doesn't start crashing stuff
-        yield new Xdp.Portal ().open_uri (null, uri, NONE, null);
+        yield new Gtk.FileLauncher (File.new_for_uri (uri)).launch (null, null);
     }
 }
 
