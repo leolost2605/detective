@@ -99,12 +99,12 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
                     warning (e.message);
                 }
 
-                destroy ();
+                hide ();
             });
 
             //In case match activation takes to long
             Timeout.add_seconds (3, () => {
-                destroy ();
+                hide ();
                 return Source.REMOVE;
             });
         });
@@ -115,11 +115,15 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             }
         });
 
-        entry.stop_search.connect (destroy);
+        entry.stop_search.connect (hide);
 
         selection_model.items_changed.connect (() => Idle.add (update_vadjustment));
 
-        weak_ref (engine.clear_search);
+        hide.connect (() => {
+            engine.clear_search ();
+            entry.text = "";
+            entry.grab_focus ();
+        });
     }
 
     private bool update_vadjustment () {
