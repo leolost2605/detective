@@ -17,7 +17,8 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             margin_top = 6,
             margin_bottom = 6,
             margin_start = 6,
-            margin_end = 6
+            margin_end = 6,
+            search_delay = 100
         };
 
         selection_model = new Gtk.SingleSelection (engine.matches) {
