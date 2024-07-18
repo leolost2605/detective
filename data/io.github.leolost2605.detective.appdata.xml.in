@@ -55,6 +55,21 @@
   </screenshots>
 
   <releases>
+    <release version="1.1.0" date="2024-07-18">
+      <description>
+        <ul>
+          <li>Fixes icons for some (especially flatpak) apps not showing</li>
+          <li>Fixes a small visual glitch that caused the background of the search view to have a slightly different color</li>
+          <li>When selecting an app that already has an window open the window will now be focused, possibly switching to its workspace</li>
+          <li>App results sorting now takes recently launched apps into account</li>
+          <li>Improved finding installed apps</li>
+          <li>Detective will now find apps that were installed while it is running</li>
+          <li>Limit file results to 50 for a snappier experience</li>
+          <li>The window will now show faster</li>
+          <li>Improve search responsiveness by only delaying by 100ms after keystrokes</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2024-06-27">
       <description>
         <p>Initial release!</p>
