@@ -53,6 +53,7 @@ public class AppMatch : Match {
     public override async void activate () throws Error {
         RelevancyService.get_default ().app_launched (app_id);
 
+#if DESKTOP_INTEGRATION
         var desktop_integration = yield DesktopIntegration.get_instance ();
         foreach (var window in yield desktop_integration.get_windows ()) {
             if (window.properties["app-id"].get_string () == app_id) {
@@ -60,6 +61,7 @@ public class AppMatch : Match {
                 return;
             }
         }
+#endif
 
         Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
     }

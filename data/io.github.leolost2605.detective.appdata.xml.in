@@ -60,7 +60,6 @@
         <ul>
           <li>Fixes icons for some (especially flatpak) apps not showing</li>
           <li>Fixes a small visual glitch that caused the background of the search view to have a slightly different color</li>
-          <li>When selecting an app that already has an window open the window will now be focused, possibly switching to its workspace</li>
           <li>App results sorting now takes recently launched apps into account</li>
           <li>Improved finding installed apps</li>
           <li>Detective will now find apps that were installed while it is running</li>
