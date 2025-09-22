@@ -26,7 +26,7 @@ public class AppMatch : Match {
     }
 
     // https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows
-    public int levenshtein_distance (string search_term, string compare_term) {
+    private int levenshtein_distance (string search_term, string compare_term) {
         // Weights are in integers, where larger numbers imply a further distance
         var deletion_weight = 1;
         var insertion_weight = 1;
@@ -62,8 +62,8 @@ public class AppMatch : Match {
             previous_row = current_row;
         }
 
-    return previous_row[compare_term.length];
-}
+        return previous_row[compare_term.length];
+    }
 
     public int set_relevancy (string search_term) {
         // Also this just grew as I thought of new things so some more considerations should be put into
@@ -83,7 +83,7 @@ public class AppMatch : Match {
             if (title.down ().has_prefix (downed_search_term)) {
                 relevancy += 5;
             }
-        } else if (levenshtein_distance (downed_search_term, title.down ()) <= max_l_distance) {
+        } else if (title_l_distance <= max_l_distance) {
             relevancy += (max_l_distance - title_l_distance) * title_weight;
         }
 
