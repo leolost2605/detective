@@ -4,6 +4,8 @@
  */
 
 public class Detective.SearchWindow : Gtk.ApplicationWindow {
+    public const int MAX_HEIGHT = 500;
+
     public Engine engine { get; construct; }
 
     //Used in signal handlers so make them fields to avoid memory leaks
@@ -41,14 +43,22 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             single_click_activate = true,
             header_factory = header_factory
         };
+        list_view.add_css_class (Granite.STYLE_CLASS_BACKGROUND);
 
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
             propagate_natural_height = true,
-            max_content_height = 400,
+            max_content_height = MAX_HEIGHT,
+        };
+
+        var preview = new Preview (selection_model);
+
+        var paned = new Gtk.Paned (HORIZONTAL) {
+            start_child = scrolled_window,
+            end_child = preview,
         };
         selection_model.bind_property (
-            "n-items", scrolled_window, "visible", SYNC_CREATE,
+            "n-items", paned, "visible", SYNC_CREATE,
             (binding, from_value, ref to_value) => {
                 to_value.set_boolean (from_value.get_uint () > 0);
                 return true;
@@ -56,14 +66,16 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         );
 
         var toolbar_view = new Adw.ToolbarView () {
-            content = scrolled_window
+            content = paned
         };
         toolbar_view.add_top_bar (entry);
 
         resizable = false;
         child = toolbar_view;
         titlebar = new Gtk.Grid () { visible = false };
-        default_width = 500;
+        default_width = 700;
+
+        map.connect (() => entry.grab_focus ());
 
         entry.search_changed.connect (() => {
             if (entry.text.strip () != "") {

@@ -14,7 +14,9 @@ subdir('plugins')
 executable(
     meson.project_name(),
     'src' / 'Application.vala',
+    'src' / 'GenericPreview.vala',
     'src' / 'MatchRow.vala',
+    'src' / 'Preview.vala',
     'src' / 'SearchWindow.vala',
     'src' / 'ShellKeyGrabber.vala',
     dependencies: [

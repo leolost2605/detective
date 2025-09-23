@@ -3,23 +3,23 @@
  * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
-public class MatchRow : Granite.Bin {
+public class GenericPreview : Granite.Bin {
     private Gtk.Image icon;
-    private Gtk.Label label;
+
+    private Granite.HeaderLabel label;
 
     construct {
-        icon = new Gtk.Image ();
-
-        label = new Gtk.Label ("") {
-            hexpand = true,
-            xalign = 0
+        icon = new Gtk.Image () {
+            pixel_size = 64
         };
 
-        var content = new Gtk.Box (HORIZONTAL, 6) {
+        label = new Granite.HeaderLabel ("");
+
+        var content = new Gtk.Box (VERTICAL, 6) {
+            margin_top = 12,
             margin_start = 12,
             margin_end = 12,
-            margin_top = 6,
-            margin_bottom = 6
+            margin_bottom = 12
         };
         content.append (icon);
         content.append (label);
@@ -30,5 +30,6 @@ public class MatchRow : Granite.Bin {
     public void bind (Match match) {
         icon.gicon = match.icon;
         label.label = match.title;
+        label.secondary_text = match.description;
     }
 }
