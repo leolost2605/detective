@@ -5,6 +5,7 @@ sources = [
     'Match' / 'MatchType.vala',
     'Match' / 'Query.vala',
     'Match' / 'SearchProvider.vala',
+    'Utils' / 'Algorithms.vala',
     'Utils' / 'TrackerProvider.vala',
 ]
 
