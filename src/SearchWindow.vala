@@ -177,6 +177,8 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     }
 
     private void on_items_changed () {
-        list_view.scroll_to (0, SELECT, null);
+        if (selection_model.get_n_items () > 0) {
+            list_view.scroll_to (0, SELECT, null);
+        }
     }
 }
