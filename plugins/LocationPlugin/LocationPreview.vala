@@ -20,14 +20,15 @@ public class LocationPreview : Granite.Bin {
         name_label = new Gtk.Label (null) {
             halign = START
         };
+        name_label.add_css_class (Granite.STYLE_CLASS_H3_LABEL);
 
         address_label = new Gtk.Label (null) {
             halign = START
         };
+        address_label.add_css_class (Granite.STYLE_CLASS_DIM_LABEL);
 
         var header_grid = new Gtk.Grid () {
             column_spacing = 12,
-            row_spacing = 6,
         };
         header_grid.attach (icon, 0, 0, 1, 2);
         header_grid.attach (name_label, 1, 0, 1, 1);
