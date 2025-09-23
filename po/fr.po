@@ -33,7 +33,7 @@ msgstr ""
 
 #: data/io.github.leolost2605.detective.desktop.in:6
 msgid "Detective"
-msgstr "Détective"
+msgstr "Detective"
 
 #: data/io.github.leolost2605.detective.desktop.in:7
 msgid "Quickly search for apps and files"
