@@ -75,9 +75,10 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         child = toolbar_view;
         titlebar = new Gtk.Grid () { visible = false };
         default_width = 700;
+        hide_on_close = true;
 
-        ((Gtk.Widget) this).realize.connect (on_realize);
-
+        notify["is-active"].connect (on_is_active_changed);
+        close_request.connect (on_close_request);
         map.connect (() => entry.grab_focus ());
 
         entry.search_changed.connect (() => {
@@ -89,7 +90,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
 
         entry.activate.connect (on_entry_activated);
-        entry.stop_search.connect (hide);
+        entry.stop_search.connect (close);
 
         list_view.activate.connect (activate_match);
 
@@ -98,12 +99,6 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         child.add_controller (key_controller);
 
         selection_model.items_changed.connect_after (on_items_changed);
-
-        hide.connect (() => {
-            engine.clear_search ();
-            entry.text = "";
-            entry.grab_focus ();
-        });
     }
 
     private void on_row_setup (Object obj) {
@@ -128,24 +123,16 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
     }
 
-    private void on_realize () {
-        var surface = get_surface ();
-
-        if (surface != null) {
-            surface.notify["state"].connect (on_toplevel_state_changed);
+    private void on_is_active_changed () {
+        if (!is_active) {
+            close ();
         }
     }
 
-    private void on_toplevel_state_changed () {
-        var surface = (Gdk.Toplevel) get_surface ();
-
-        if (surface == null) {
-            return;
-        }
-
-        if (!(FOCUSED in surface.state)) {
-            hide ();
-        }
+    private bool on_close_request () {
+        engine.clear_search ();
+        entry.text = "";
+        return false;
     }
 
     private void on_entry_activated () {
@@ -164,12 +151,12 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         } catch (Error e) {
             warning (e.message);
         }
-        hide ();
+        close ();
     }
 
     private bool on_key_pressed (uint keyval, uint keycode) {
         if (keyval == Gdk.Key.Escape) {
-            hide ();
+            close ();
             return Gdk.EVENT_STOP;
         }
 
