@@ -75,6 +75,8 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         titlebar = new Gtk.Grid () { visible = false };
         default_width = 700;
 
+        ((Gtk.Widget) this).realize.connect (on_realize);
+
         map.connect (() => entry.grab_focus ());
 
         entry.search_changed.connect (() => {
@@ -123,6 +125,26 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         var list_header = (Gtk.ListHeader) obj;
         var item = (Match) list_header.item;
         ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
+    }
+
+    private void on_realize () {
+        var surface = get_surface ();
+
+        if (surface != null) {
+            surface.notify["state"].connect (on_toplevel_state_changed);
+        }
+    }
+
+    private void on_toplevel_state_changed () {
+        var surface = (Gdk.Toplevel) get_surface ();
+
+        if (surface == null) {
+            return;
+        }
+
+        if (!(FOCUSED in surface.state)) {
+            hide ();
+        }
     }
 
     private void on_entry_activated () {

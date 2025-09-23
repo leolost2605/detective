@@ -1,21 +1,21 @@
-# German translations for io.github.leolost2605.detective package.
-# Copyright (C) 2024 THE io.github.leolost2605.detective'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the io.github.leolost2605.detective package.
-# Automatically generated, 2024.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: io.github.leolost2605.detective\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-26 22:20+0200\n"
-"PO-Revision-Date: 2024-06-26 22:19+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
-"Language: de\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: data/io.github.leolost2605.detective.appdata.xml.in:5
 msgid "MyApp"
@@ -37,12 +37,12 @@ msgstr "Detective"
 
 #: data/io.github.leolost2605.detective.desktop.in:7
 msgid "Quickly search for apps and files"
-msgstr "Apps und Dateien schnell durchsuchen"
+msgstr "Recherchez rapidement des applications et des fichiers"
 
 #: src/Application.vala:50
 msgid ""
 "Detective needs to run in the background to be easily invokable via keyboard "
 "shortcuts."
 msgstr ""
-"Detective muss im Hintergrund laufen, damit es über Tastaturkürzel "
-"leicht aufgerufen werden kann."
+"Detective doit fonctionner en arrière-plan pour être facilement accessible "
+"via les raccourcis clavier."
