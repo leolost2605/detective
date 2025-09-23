@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
+ */
+
 public class Detective.SearchWindow : Gtk.ApplicationWindow {
     public Engine engine { get; construct; }
 
@@ -6,7 +11,6 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     private Gtk.SingleSelection selection_model;
     private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
-    private Gtk.Stack stack;
 
     public SearchWindow (Application app, Engine engine) {
         Object (application: app, engine: engine);
@@ -18,7 +22,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             margin_bottom = 6,
             margin_start = 6,
             margin_end = 6,
-            search_delay = 100
+            placeholder_text = _("Search apps, files and more..."),
         };
 
         selection_model = new Gtk.SingleSelection (engine.matches) {
@@ -51,37 +55,34 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
 
         list_view = new Gtk.ListView (selection_model, factory) {
-            vexpand = true,
             single_click_activate = true,
             header_factory = header_factory
         };
         list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
         list_view.add_css_class (Granite.STYLE_CLASS_BACKGROUND);
 
-        var view_port = new Gtk.Viewport (null, null) {
-            child = list_view,
-            scroll_to_focus = false
-        };
-
         scrolled_window = new Gtk.ScrolledWindow () {
-            child = view_port
+            child = list_view,
+            propagate_natural_height = true,
+            max_content_height = 400,
         };
+        selection_model.bind_property (
+            "n-items", scrolled_window, "visible", SYNC_CREATE,
+            (binding, from_value, ref to_value) => {
+                to_value.set_boolean (from_value.get_uint () > 0);
+                return true;
+            }
+        );
 
-        var placeholder = new Granite.Placeholder (_("Start typing to search")) {
-            icon = new ThemedIcon ("system-search")
+        var toolbar_view = new Adw.ToolbarView () {
+            content = scrolled_window
         };
-
-        stack = new Gtk.Stack ();
-        stack.add_named (placeholder, "placeholder");
-        stack.add_named (scrolled_window, "list");
-
-        var content = new Gtk.Box (VERTICAL, 6);
-        content.append (entry);
-        content.append (stack);
+        toolbar_view.add_top_bar (entry);
 
         resizable = false;
-        child = content;
+        child = toolbar_view;
         titlebar = new Gtk.Grid () { visible = false };
+        default_width = 500;
 
         entry.search_changed.connect (() => {
             if (entry.text.strip () != "") {
@@ -91,37 +92,13 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             }
         });
 
-        list_view.activate.connect ((position) => {
-            var match = (Match) engine.matches.get_item (position);
-            match.activate.begin ((obj, res) => {
-                try {
-                    match.activate.end (res);
-                } catch (Error e) {
-                    warning (e.message);
-                }
-
-                hide ();
-            });
-        });
-
-        entry.activate.connect (() => {
-            if (selection_model.selected != Gtk.INVALID_LIST_POSITION) {
-                list_view.activate (selection_model.selected);
-            }
-        });
-
+        entry.activate.connect (on_entry_activated);
         entry.stop_search.connect (hide);
 
+        list_view.activate.connect (activate_match);
+
         var key_controller = new Gtk.EventControllerKey ();
-        key_controller.key_pressed.connect ((keyval, keycode) => {
-            if (keyval == Gdk.Key.Escape) {
-                hide ();
-                return Gdk.EVENT_STOP;
-            }
-
-            return Gdk.EVENT_PROPAGATE;
-        });
-
+        key_controller.key_pressed.connect (on_key_pressed);
         child.add_controller (key_controller);
 
         selection_model.items_changed.connect (() => Idle.add (update_vadjustment));
@@ -133,16 +110,37 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         });
     }
 
+    private void on_entry_activated () {
+        activate_match.begin (selection_model.selected);
+    }
+
+    private async void activate_match (uint position) {
+        var match = (Match) engine.matches.get_item (position);
+
+        if (match == null) {
+            return;
+        }
+
+        try {
+            yield match.activate ();
+        } catch (Error e) {
+            warning (e.message);
+        }
+        hide ();
+    }
+
+    private bool on_key_pressed (uint keyval, uint keycode) {
+        if (keyval == Gdk.Key.Escape) {
+            hide ();
+            return Gdk.EVENT_STOP;
+        }
+
+        return Gdk.EVENT_PROPAGATE;
+    }
+
     private bool update_vadjustment () {
         scrolled_window.vadjustment.value = 0;
         selection_model.selected = 0;
-
-        if (selection_model.n_items > 0) {
-            stack.visible_child_name = "list";
-        } else {
-            stack.visible_child_name = "placeholder";
-        }
-
         return Source.REMOVE;
     }
 }

@@ -20,9 +20,10 @@ executable(
     dependencies: [
         dependency('gtk4'),
         dependency('granite-7'),
-        dependency('tracker-sparql-3.0'),
+        dependency('libadwaita-1'),
         dependency('libportal'),
         dependency('libportal-gtk4'),
+        dependency('tracker-sparql-3.0'),
         lib_dep
     ],
     install: true

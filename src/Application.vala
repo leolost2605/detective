@@ -1,6 +1,6 @@
 /*
- * SPDX-License-Identifier: GPL-2.0-or-later
- * SPDX-FileCopyrightText: 2023 Your Organization (https://yourwebsite.com)
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
 public class Detective.Application : Gtk.Application {
@@ -62,11 +62,7 @@ public class Detective.Application : Gtk.Application {
 
     public void present_window () {
         if (active_window == null) {
-            new SearchWindow (this, engine) {
-                default_height = 500,
-                default_width = 900,
-                title = "Detective"
-            };
+            new SearchWindow (this, engine);
         }
         active_window.present ();
 

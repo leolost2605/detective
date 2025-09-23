@@ -89,7 +89,7 @@ public class AppMatch : Match {
 
         if (description != null && description.down ().contains (downed_search_term)) {
             relevancy += description_weight;
-        } 
+        }
 
         if (keywords != null) {
             foreach (unowned var keyword in keywords) {
