@@ -1,4 +1,4 @@
-public class Query : Object {
+public class Detective.Query : Object {
     public string search_term { get; construct; }
 
     public int n_results { get; construct; }

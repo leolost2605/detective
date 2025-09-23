@@ -1,6 +1,6 @@
 
 // This whole thing is just for testing
-public class TrackerProvider : SearchProvider {
+public class Detective.TrackerProvider : SearchProvider {
     public signal void cleared ();
 
     // Needs to have exactly one printf style %s for the search term

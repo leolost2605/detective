@@ -1,4 +1,4 @@
-public class FileMatch : Match {
+public class Detective.FileMatch : Match {
     public string uri { get; construct; }
 
     public FileMatch (int relevancy, string title, string? description, Icon? icon, string uri) {
@@ -16,7 +16,7 @@ public class FileMatch : Match {
     }
 }
 
-public static TrackerProvider get_provider () {
+public static Detective.TrackerProvider get_provider () {
     var query = """
         SELECT nfo:fileName(?r) nie:url(?r) nie:mimeType(nie:interpretedAs(?r)) fts:rank(?r) {
             GRAPH tracker:FileSystem {
@@ -27,7 +27,7 @@ public static TrackerProvider get_provider () {
           LIMIT 50
     """;
 
-    var provider = new TrackerProvider (query, _("Files"), (cursor) => {
+    var provider = new Detective.TrackerProvider (query, _("Files"), (cursor) => {
         var url = cursor.get_string (1);
 
         string path = url;
@@ -44,7 +44,7 @@ public static TrackerProvider get_provider () {
             icon = new ThemedIcon ("unknown");
         }
 
-        return new FileMatch ((int) cursor.get_integer (3) * 10, cursor.get_string (0), path, icon, url);
+        return new Detective.FileMatch ((int) cursor.get_integer (3) * 10, cursor.get_string (0), path, icon, url);
     });
 
     return provider;

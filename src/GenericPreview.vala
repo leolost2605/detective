@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
-public class GenericPreview : Granite.Bin {
+public class Detective.GenericPreview : Granite.Bin {
     private Gtk.Image icon;
 
     private Granite.HeaderLabel label;

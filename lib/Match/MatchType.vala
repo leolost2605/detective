@@ -2,7 +2,7 @@
 /**
  * Specifies the type of a match. Matches of the same type are grouped together.
  */
-public class MatchType : Object {
+public class Detective.MatchType : Object {
     /**
      * The name of the MatchType. Shown to the user in a header.
      */

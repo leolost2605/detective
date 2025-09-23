@@ -1,4 +1,4 @@
-public class AppMatch : Match {
+public class Detective.AppMatch : Match {
     public string app_id { get; construct; }
     public string exec { get; construct; }
     public string[]? keywords { get; construct; }
@@ -126,7 +126,7 @@ public class AppMatch : Match {
     }
 }
 
-public class AppsProvider : SearchProvider {
+public class Detective.AppsProvider : SearchProvider {
     public static MatchType match_type_apps;
 
     private string[] paths = {
@@ -386,6 +386,6 @@ public class AppsProvider : SearchProvider {
     }
 }
 
-public static AppsProvider get_provider () {
-    return new AppsProvider ();
+public static Detective.AppsProvider get_provider () {
+    return new Detective.AppsProvider ();
 }

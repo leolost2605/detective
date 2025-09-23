@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
-public class MatchRow : Granite.Bin {
+public class Detective.MatchRow : Granite.Bin {
     private Gtk.Image icon;
     private Gtk.Label label;
 

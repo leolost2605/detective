@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
-public class LocationPreview : Granite.Bin {
+public class Detective.LocationPreview : Granite.Bin {
     private Gtk.Image icon;
     private Gtk.Label name_label;
     private Gtk.Label address_label;

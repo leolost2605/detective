@@ -1,4 +1,4 @@
-internal class PluginLoader : Object {
+internal class Detective.PluginLoader : Object {
     internal SearchProvider[] providers;
 
     private delegate SearchProvider GetProviderFunc (Module module);

@@ -1,4 +1,4 @@
-public class LocationMatch : Match {
+public class Detective.LocationMatch : Match {
     private static LocationPreview preview = new LocationPreview ();
 
     public Geocode.Place place { get; construct; }
@@ -23,7 +23,7 @@ public class LocationMatch : Match {
     }
 }
 
-public class LocationProvider : SearchProvider {
+public class Detective.LocationProvider : SearchProvider {
     private ListStore store;
     private Soup.Session session;
 
@@ -274,7 +274,7 @@ public class LocationProvider : SearchProvider {
     }
 }
 
-public static LocationProvider get_provider () {
+public static Detective.LocationProvider get_provider () {
     Gtk.IconTheme.get_for_display (Gdk.Display.get_default ()).add_resource_path ("/io/github/leolost2605/detective/location-plugin/");
-    return new LocationProvider ();
+    return new Detective.LocationProvider ();
 }

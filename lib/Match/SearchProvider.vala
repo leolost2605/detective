@@ -1,4 +1,4 @@
-public abstract class SearchProvider : Object {
+public abstract class Detective.SearchProvider : Object {
     public ListModel match_types { get; set; }
 
     /**
