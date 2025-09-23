@@ -1,4 +1,6 @@
 public class LocationMatch : Match {
+    private static LocationPreview preview = new LocationPreview ();
+
     public Geocode.Place place { get; construct; }
 
     public LocationMatch (Geocode.Place place) {
@@ -10,6 +12,11 @@ public class LocationMatch : Match {
         title = place.name;
         icon = place.icon;
         description = place.street_address;
+    }
+
+    public override Gtk.Widget? get_custom_preview () {
+        preview.bind (place);
+        return preview;
     }
 
     public override async void activate () throws Error {
@@ -234,5 +241,6 @@ public class LocationProvider : SearchProvider {
 }
 
 public static LocationProvider get_provider () {
+    Gtk.IconTheme.get_for_display (Gdk.Display.get_default ()).add_resource_path ("/io/github/leolost2605/detective/location-plugin/");
     return new LocationProvider ();
 }

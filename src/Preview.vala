@@ -34,8 +34,9 @@ public class Detective.Preview : Granite.Bin {
             return;
         }
 
-        if (match.custom_preview != null) {
-            scrolled_window.child = match.custom_preview;
+        var custom_preview = match.get_custom_preview ();
+        if (custom_preview != null) {
+            scrolled_window.child = custom_preview;
             return;
         }
 
