@@ -24,8 +24,9 @@ public class MatchType : Object {
         };
 
         var sort_model = new Gtk.SortListModel (results, relevancy_sorter);
+        var slice_model = new Gtk.SliceListModel (sort_model, 0, 5);
 
-        Object (name: name, results: sort_model);
+        Object (name: name, results: slice_model);
     }
 
     construct {

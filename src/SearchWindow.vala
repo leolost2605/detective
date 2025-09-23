@@ -9,7 +9,6 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     //Used in signal handlers so make them fields to avoid memory leaks
     private Gtk.SearchEntry entry;
     private Gtk.SingleSelection selection_model;
-    private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
 
     public SearchWindow (Application app, Engine engine) {
@@ -31,35 +30,17 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         };
 
         var factory = new Gtk.SignalListItemFactory ();
-        factory.setup.connect ((obj) => {
-            var list_item = (Gtk.ListItem) obj;
-            list_item.child = new MatchRow ();
-        });
-
-        factory.bind.connect ((obj) => {
-            var list_item = (Gtk.ListItem) obj;
-            var item = (Match) list_item.item;
-            ((MatchRow) list_item.child).bind (item);
-        });
+        factory.setup.connect (on_row_setup);
+        factory.bind.connect (on_row_bind);
 
         var header_factory = new Gtk.SignalListItemFactory ();
-        header_factory.setup.connect ((obj) => {
-            var list_header = (Gtk.ListHeader) obj;
-            list_header.child = new Granite.HeaderLabel ("");
-        });
+        header_factory.setup.connect (on_header_setup);
+        header_factory.bind.connect (on_header_bind);
 
-        header_factory.bind.connect ((obj) => {
-            var list_header = (Gtk.ListHeader) obj;
-            var item = (Match) list_header.item;
-            ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
-        });
-
-        list_view = new Gtk.ListView (selection_model, factory) {
+        var list_view = new Gtk.ListView (selection_model, factory) {
             single_click_activate = true,
             header_factory = header_factory
         };
-        list_view.add_css_class (Granite.STYLE_CLASS_RICH_LIST);
-        list_view.add_css_class (Granite.STYLE_CLASS_BACKGROUND);
 
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
@@ -108,6 +89,28 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             entry.text = "";
             entry.grab_focus ();
         });
+    }
+
+    private void on_row_setup (Object obj) {
+        var list_item = (Gtk.ListItem) obj;
+        list_item.child = new MatchRow ();
+    }
+
+    private void on_row_bind (Object obj) {
+        var list_item = (Gtk.ListItem) obj;
+        var item = (Match) list_item.item;
+        ((MatchRow) list_item.child).bind (item);
+    }
+
+    private void on_header_setup (Object obj) {
+        var list_header = (Gtk.ListHeader) obj;
+        list_header.child = new Granite.HeaderLabel ("");
+    }
+
+    private void on_header_bind (Object obj) {
+        var list_header = (Gtk.ListHeader) obj;
+        var item = (Match) list_header.item;
+        ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
     }
 
     private void on_entry_activated () {

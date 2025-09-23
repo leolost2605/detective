@@ -1,25 +1,29 @@
-public class MatchRow : Gtk.Box {
+public class MatchRow : Granite.Bin {
     private Gtk.Image icon;
-    private Granite.HeaderLabel text;
+    private Gtk.Label label;
 
     construct {
-        icon = new Gtk.Image () {
-            icon_size = LARGE
+        icon = new Gtk.Image ();
+
+        label = new Gtk.Label ("") {
+            hexpand = true,
+            xalign = 0
         };
 
-        text = new Granite.HeaderLabel ("") {
-            hexpand = true
+        var content = new Gtk.Box (HORIZONTAL, 6) {
+            margin_start = 12,
+            margin_end = 12,
+            margin_top = 6,
+            margin_bottom = 6
         };
+        content.append (icon);
+        content.append (label);
 
-        orientation = HORIZONTAL;
-        spacing = 6;
-        append (icon);
-        append (text);
+        child = content;
     }
 
     public void bind (Match match) {
         icon.gicon = match.icon;
-        text.label = match.title;
-        text.secondary_text = match.description;
+        label.label = match.title;
     }
 }
