@@ -1,10 +1,10 @@
 sources = [
     'Engine.vala',
-    'Match.vala',
-    'MatchType.vala',
     'PluginLoader.vala',
-    'Query.vala',
-    'SearchProvider.vala',
+    'Match' / 'Match.vala',
+    'Match' / 'MatchType.vala',
+    'Match' / 'Query.vala',
+    'Match' / 'SearchProvider.vala',
     'Utils' / 'TrackerProvider.vala',
 ]
 

@@ -1,3 +1,10 @@
+namespace Relevancy {
+    public const int HIGHEST = 100;
+    public const int HIGH = 75;
+    public const int MEDIUM = 50;
+    public const int LOW = 25;
+}
+
 public class Match : Object {
     public string match_type_name { get; internal set; }
 
