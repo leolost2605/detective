@@ -102,7 +102,9 @@ public class Detective.AppsProvider : SearchProvider {
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
             var match = (AppMatch) obj;
             return query != null ? match.set_relevancy (query.search_term) > 0 : false;
-        }));
+        })) {
+            incremental = true
+        };
 
         match_type_apps = new MatchType (_("Applications"), filter_list_model);
 

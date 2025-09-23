@@ -1,5 +1,6 @@
 sources = [
     'Engine.vala',
+    'InternalProvider.vala',
     'PluginLoader.vala',
     'Match' / 'Match.vala',
     'Match' / 'MatchType.vala',

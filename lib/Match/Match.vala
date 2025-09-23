@@ -3,6 +3,7 @@ namespace Detective.Relevancy {
     public const int HIGH = 75;
     public const int MEDIUM = 50;
     public const int LOW = 25;
+    public const int LOWEST = 1;
 }
 
 public class Detective.Match : Object {
