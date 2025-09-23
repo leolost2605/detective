@@ -107,10 +107,44 @@ public class LocationProvider : SearchProvider {
 
         var place = new Geocode.Place.with_location (name, type, new Geocode.Location (lat, lon));
 
+        string[] address_parts = {};
+
+        string? street = null;
+
         if (properties.has_member ("street")) {
-            place.street = properties.get_string_member ("street");
+            street = properties.get_string_member ("street");
         }
 
+        if (properties.has_member ("housenumber")) {
+            street += " " + properties.get_string_member ("housenumber");
+        }
+
+        if (street != null) {
+            address_parts += street;
+        }
+
+        if (properties.has_member ("city")) {
+            address_parts += properties.get_string_member ("city");
+        } else if (properties.has_member ("town")) {
+            address_parts += properties.get_string_member ("town");
+        } else if (properties.has_member ("village")) {
+            address_parts += properties.get_string_member ("village");
+        }
+
+        if (properties.has_member ("state")) {
+            address_parts += properties.get_string_member ("state");
+        }
+
+        if (properties.has_member ("postcode")) {
+            address_parts += properties.get_string_member ("postcode");
+        }
+
+        if (properties.has_member ("country")) {
+            address_parts += properties.get_string_member ("country");
+        }
+
+        // We abuse the street_address field to show the full address
+        place.street_address = string.joinv (", ", address_parts);
         return place;
     }
 

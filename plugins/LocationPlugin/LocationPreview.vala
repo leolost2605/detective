@@ -6,7 +6,7 @@
 public class LocationPreview : Granite.Bin {
     private Gtk.Image icon;
     private Gtk.Label name_label;
-    private Gtk.Label type_label;
+    private Gtk.Label address_label;
 
     private Shumate.SimpleMap simple_map;
 
@@ -21,7 +21,7 @@ public class LocationPreview : Granite.Bin {
             halign = START
         };
 
-        type_label = new Gtk.Label (null) {
+        address_label = new Gtk.Label (null) {
             halign = START
         };
 
@@ -31,7 +31,7 @@ public class LocationPreview : Granite.Bin {
         };
         header_grid.attach (icon, 0, 0, 1, 2);
         header_grid.attach (name_label, 1, 0, 1, 1);
-        header_grid.attach (type_label, 1, 1, 1, 1);
+        header_grid.attach (address_label, 1, 1, 1, 1);
 
         var source = new Shumate.RasterRenderer.from_url ("https://tile.openstreetmap.org/{z}/{x}/{y}.png");
 
@@ -70,7 +70,7 @@ public class LocationPreview : Granite.Bin {
     public void bind (Geocode.Place place) {
         icon.gicon = place.icon;
         name_label.label = place.name;
-        type_label.label = place.place_type.to_string ();
+        address_label.label = place.street_address;
 
         marker.latitude = place.location.latitude;
         marker.longitude = place.location.longitude;
