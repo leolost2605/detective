@@ -13,6 +13,7 @@ public class Detective.Application : Gtk.Application {
     };
 
     private Engine engine;
+    private SearchWindow? window;
 
     public Application () {
         Object (
@@ -61,10 +62,11 @@ public class Detective.Application : Gtk.Application {
     }
 
     public void present_window () {
-        if (active_window == null) {
-            new SearchWindow (this, engine);
+        if (window == null) {
+            window = new SearchWindow (this, engine);
         }
-        active_window.present ();
+
+        window.present ();
 
         request_background.begin ();
     }
