@@ -4,13 +4,14 @@
  */
 
 public class Detective.SearchWindow : Gtk.ApplicationWindow {
-    public const int MAX_HEIGHT = 500;
+    public const int MAX_HEIGHT = 300;
 
     public Engine engine { get; construct; }
 
     //Used in signal handlers so make them fields to avoid memory leaks
     private Gtk.SearchEntry entry;
     private Gtk.SingleSelection selection_model;
+    private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
 
     public SearchWindow (Application app, Engine engine) {
@@ -39,7 +40,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         header_factory.setup.connect (on_header_setup);
         header_factory.bind.connect (on_header_bind);
 
-        var list_view = new Gtk.ListView (selection_model, factory) {
+        list_view = new Gtk.ListView (selection_model, factory) {
             single_click_activate = true,
             header_factory = header_factory
         };
@@ -96,7 +97,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         key_controller.key_pressed.connect (on_key_pressed);
         child.add_controller (key_controller);
 
-        selection_model.items_changed.connect (() => Idle.add (update_vadjustment));
+        selection_model.items_changed.connect_after (on_items_changed);
 
         hide.connect (() => {
             engine.clear_search ();
@@ -175,9 +176,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         return Gdk.EVENT_PROPAGATE;
     }
 
-    private bool update_vadjustment () {
-        scrolled_window.vadjustment.value = 0;
-        selection_model.selected = 0;
-        return Source.REMOVE;
+    private void on_items_changed () {
+        list_view.scroll_to (0, SELECT, null);
     }
 }
