@@ -8,8 +8,6 @@ public class Match : Object {
     public Icon? icon { get; construct set; }
     public Gdk.Paintable? paintable { get; construct set; }
 
-    public Gtk.Widget? custom_preview { get; construct; }
-
     public Match (int relevancy, string title, string? description, Icon? icon, Gdk.Paintable? paintable) {
         Object (
             relevancy: relevancy,
@@ -18,6 +16,10 @@ public class Match : Object {
             icon: icon,
             paintable: paintable
         );
+    }
+
+    public virtual Gtk.Widget? get_custom_preview () {
+        return null;
     }
 
     public virtual async void activate () throws Error {
