@@ -1,9 +1,12 @@
 public class Detective.AppMatch : Match {
     public string app_id { get; construct; }
     public string exec { get; construct; }
-    public string[]? keywords { get; construct; }
+    public string[] keywords { get; construct; }
 
-    public AppMatch (string app_id, string title, string? description, Icon? icon, string exec, string[]? keywords) {
+    private string[] title_tokens;
+    private string[] description_tokens;
+
+    public AppMatch (string app_id, string title, string? description, Icon? icon, string exec, string[] keywords) {
         Object (
             relevancy: 0,
             app_id: app_id,
@@ -15,43 +18,30 @@ public class Detective.AppMatch : Match {
         );
     }
 
-    public int set_relevancy (string search_term) {
-        // Also this just grew as I thought of new things so some more considerations should be put into
-        // some things. E.g. how do we weight the relevancy from times launched? Should it be more than 1/10? Probably
-        const int max_l_distance = 5;
-        const int title_weight = 20;
-        const int description_weight = 5;
-        const int keyword_weight = 1;
+    construct {
+        title_tokens = title.tokenize_and_fold (null, null);
+        description_tokens = description?.tokenize_and_fold (null, null) ?? new string[0];
+    }
+
+    public int set_relevancy (Query query) {
+        const int title_weight = Relevancy.HIGH;
+        const int description_weight = Relevancy.MEDIUM;
+        const int keyword_weight = Relevancy.LOW;
 
         int relevancy = 0;
-        var downed_search_term = search_term.down ();
 
-        var title_l_distance = Algorithms.levenshtein_distance (downed_search_term, title.down ());
-        if (title.down ().contains (downed_search_term)) {
-            relevancy += title_weight * (max_l_distance + 1); // weight an exact match more heavily than a close match
+        relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, title_tokens, title_weight);
+        relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, description_tokens, description_weight);
 
-            if (title.down ().has_prefix (downed_search_term)) {
-                relevancy += 5;
-            }
-        } else if (title_l_distance <= max_l_distance) {
-            relevancy += (max_l_distance - title_l_distance) * title_weight;
+        foreach (var keyword in keywords) {
+            relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, { keyword }, keyword_weight);
         }
 
-        if (description != null && description.down ().contains (downed_search_term)) {
-            relevancy += description_weight;
-        }
-
-        if (keywords != null) {
-            foreach (unowned var keyword in keywords) {
-                var keyword_l_distance = Algorithms.levenshtein_distance (downed_search_term, keyword.down ());
-                if (keyword_l_distance < 3) {
-                    relevancy += (3 - keyword_l_distance) * keyword_weight;
-                }
-            }
-        }
+        relevancy = int.min (relevancy, Relevancy.HIGHEST);
 
         if (relevancy > 0) {
-            relevancy += + (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * 50);
+            var recency_relevancy = (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * Relevancy.HIGHEST);
+            relevancy = (relevancy * 2 + recency_relevancy) / 3;
         }
 
         this.relevancy = relevancy;
@@ -101,7 +91,7 @@ public class Detective.AppsProvider : SearchProvider {
 
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
             var match = (AppMatch) obj;
-            return query != null ? match.set_relevancy (query.search_term) > 0 : false;
+            return query != null ? match.set_relevancy (query) > 0 : false;
         })) {
             incremental = true
         };
@@ -316,7 +306,7 @@ public class Detective.AppsProvider : SearchProvider {
             debug ("Failed to get icon: %s", e.message);
         }
 
-        string[]? keywords = null;
+        string[] keywords = {};
         try {
             keywords = key_file.get_locale_string_list ("Desktop Entry", "Keywords", null);
         } catch (Error e) {

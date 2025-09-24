@@ -53,4 +53,42 @@ namespace Detective.Algorithms {
 
         return previous_row[compare_term.length];
     }
+
+    public double ratio (string search_term, string compare_term) {
+        var distance = levenshtein_distance (search_term, compare_term);
+        var combined_length = search_term.length + compare_term.length;
+
+        return (double) (combined_length - distance) / (double) combined_length;
+    }
+
+    public int fuzzy_relevancy (string[] search_tokens, string[] compare_tokens, int weight, int max_distance = 2) {
+        // Sum up the best ratio for every search token
+        double total_ratio = 0;
+        foreach (var search_token in search_tokens) {
+            double max_ratio = 0;
+            var search_n_chars = search_token.char_count ();
+
+            foreach (var compare_token in compare_tokens) {
+                // We don't match the whole compare token but only the prefix of length search_token.char_cout ()
+                // This allows search as you type and automatically applies penalties if we are too far in the middle
+                // Idk if that makes sense but it feels good when using :)
+                if (search_n_chars < compare_token.char_count ()) {
+                    compare_token = compare_token.substring (0, compare_token.index_of_nth_char (search_n_chars));
+                }
+
+                max_ratio = double.max (max_ratio, ratio (search_token, compare_token));
+            }
+
+            if (max_ratio < 1 - ((double) max_distance / (double) search_n_chars)) {
+                continue;
+            }
+
+            total_ratio += max_ratio;
+        }
+
+        // Take the average
+        var avg_ratio = total_ratio / search_tokens.length;
+
+        return (int) (weight * avg_ratio);
+    }
 }
