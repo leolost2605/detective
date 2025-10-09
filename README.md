@@ -1,3 +1,19 @@
+<div align="center">
+  <img alt="An icon representing an open book and a magnifying glass" src="data/128.svg" />
+  <h1>Detective</h1>
+  <h3>Quickly search through apps and files</h3>
+  <a href="https://elementary.io"><img src="https://ellie-commons.github.io/community-badge.svg" alt="Made for elementary OS"></a>
+<span align="center"> <img class="center" src="https://github.com/leolost2605/detective/blob/main/data/screenshots/Search%20fi.png" alt="Search results showing various apps below a search field"><span>
+</div>
+<br/>
+
+## Installation
+
+You can download and install Detective here:
+
+[![Get it on AppCenter](https://appcenter.elementary.io/badge.svg?new)](https://appcenter.elementary.io/io.github.leolost2605.detective/) 
+
+
 ## Building, Testing, and Installation
 
 Run `flatpak-builder` to configure the build environment, download dependencies, build, and install
