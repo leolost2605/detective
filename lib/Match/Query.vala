@@ -1,5 +1,6 @@
 public class Detective.Query : Object {
     public string search_term { get; construct; }
+    public string[] search_tokens { get; construct; }
 
     public int n_results { get; construct; }
 
@@ -12,7 +13,8 @@ public class Detective.Query : Object {
     public Cancellable cancellable { get; construct; }
 
     internal Query (string search_term, int n_results) {
-        Object (search_term: search_term, n_results: n_results);
+        var tokens = search_term.tokenize_and_fold (null, null);
+        Object (search_term: search_term, search_tokens: tokens, n_results: n_results);
     }
 
     construct {
