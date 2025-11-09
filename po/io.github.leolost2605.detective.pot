@@ -51,6 +51,16 @@ msgstr ""
 msgid "Search \"%s\" on %s"
 msgstr ""
 
-#: plugins/WebSearchPlugin/Plugin.vala:47
+#. Translators: %s is the URL to open
+#: plugins/WebSearchPlugin/Plugin.vala:40
+#, c-format
+msgid "Open %s"
+msgstr ""
+
+#: plugins/WebSearchPlugin/Plugin.vala:46
+msgid "Open URL in browser"
+msgstr ""
+
+#: plugins/WebSearchPlugin/Plugin.vala:74
 msgid "Web Search"
 msgstr ""
