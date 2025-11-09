@@ -70,6 +70,7 @@ public class Detective.AppsProvider : SearchProvider {
     public static MatchType match_type_apps;
 
     private string[] paths = {
+        Environment.get_home_dir () + "/.local/share",
         Environment.get_home_dir () + "/.local/share/flatpak/exports/share",
         "/var/lib/flatpak/exports/share",
         "/var/lib/snapd/desktop"
