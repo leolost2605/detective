@@ -11,12 +11,15 @@ public class Detective.WebSearchMatch : Match {
     public WebSearchMatch (string search_engine, string search_query, string url) {
         var icon = new ThemedIcon ("system-search");
 
+        // Translators: %s is the search query, %s is the search engine name
+        string match_title = _("Search \"%s\" on %s").printf (search_query, search_engine);
+
         Object (
             relevancy: Relevancy.LOWEST,
             search_engine: search_engine,
             search_query: search_query,
             url: url,
-            title: @"Search \"$search_query\" on $search_engine",
+            title: match_title,
             description: url,
             icon: icon
         );

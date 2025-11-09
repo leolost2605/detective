@@ -4,3 +4,4 @@ src/Application.vala
 src/MatchRow.vala
 src/SearchWindow.vala
 src/ShellKeyGrabber.vala
+plugins/WebSearchPlugin/Plugin.vala

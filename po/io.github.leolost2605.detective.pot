@@ -44,3 +44,13 @@ msgid ""
 "Detective needs to run in the background to be easily invokable via keyboard "
 "shortcuts."
 msgstr ""
+
+#. Translators: %s is the search query, %s is the search engine name
+#: plugins/WebSearchPlugin/Plugin.vala:15
+#, c-format
+msgid "Search \"%s\" on %s"
+msgstr ""
+
+#: plugins/WebSearchPlugin/Plugin.vala:47
+msgid "Web Search"
+msgstr ""
