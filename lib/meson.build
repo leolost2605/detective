@@ -23,6 +23,8 @@ config_vapi = meson.get_compiler('vala').find_library('config', dirs: meson.curr
 
 config_data = configuration_data()
 config_data.set_quoted('PLUGIN_DIR', plugin_dir)
+config_data.set_quoted('GETTEXT_PACKAGE', meson.project_name())
+config_data.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
 
 config_header = configure_file(
     configuration: config_data,
@@ -43,7 +45,10 @@ libdetective = library(
 
 lib_dep = declare_dependency(
     link_with: libdetective,
-    dependencies: libdetective_deps,
+    dependencies: [
+        libdetective_deps,
+        config_vapi,
+    ],
     include_directories: [include_directories('.')],
 )
 
