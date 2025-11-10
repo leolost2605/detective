@@ -8,7 +8,7 @@ public class Detective.LocationMatch : Match {
     }
 
     construct {
-        relevancy = 30;
+        relevancy = Relevancy.LOW;
         title = place.name;
         icon = place.icon;
         description = place.street_address;
