@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
+ */
+
 namespace Detective.Relevancy {
     public const int HIGHEST = 100;
     public const int HIGH = 75;
@@ -7,6 +12,7 @@ namespace Detective.Relevancy {
 }
 
 public class Detective.Match : Object {
+    // Will be automatically set by the MatchType this match is added to
     public string match_type_name { get; internal set; }
 
     public int relevancy { get; construct set; default = 0; }
