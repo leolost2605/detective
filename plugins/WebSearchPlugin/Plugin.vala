@@ -26,7 +26,8 @@ public class Detective.WebSearchMatch : Match {
     }
 
     public override async void activate () throws Error {
-        Process.spawn_command_line_async (@"flatpak-spawn --host xdg-open \"$url\"");
+        var launcher = new Gtk.UriLauncher (url);
+        yield launcher.launch (null, null);
     }
 }
 
@@ -49,7 +50,8 @@ public class Detective.OpenUrlMatch : Match {
     }
 
     public override async void activate () throws Error {
-        Process.spawn_command_line_async (@"flatpak-spawn --host xdg-open \"$url\"");
+        var launcher = new Gtk.UriLauncher (url);
+        yield launcher.launch (null, null);
     }
 }
 
