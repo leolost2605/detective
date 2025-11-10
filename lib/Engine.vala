@@ -24,9 +24,7 @@ public class Detective.Engine : Object {
 
         var match_type_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (MatchType), null, "best-match-relevancy"));
 
-        var match_type_sort_model = new Gtk.SortListModel (flatten_model, match_type_sorter) {
-            incremental = true
-        };
+        var match_type_sort_model = new Gtk.SortListModel (flatten_model, match_type_sorter);
 
         var match_model = new Gtk.MapListModel (match_type_sort_model, (obj) => {
             return ((MatchType) obj).results;

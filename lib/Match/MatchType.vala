@@ -23,9 +23,7 @@ public class Detective.MatchType : Object {
             sort_order = DESCENDING
         };
 
-        var sort_model = new Gtk.SortListModel (results, relevancy_sorter) {
-            incremental = true
-        };
+        var sort_model = new Gtk.SortListModel (results, relevancy_sorter);
         var slice_model = new Gtk.SliceListModel (sort_model, 0, 5);
 
         Object (name: name, results: slice_model);
