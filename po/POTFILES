@@ -9,3 +9,4 @@ plugins/AppsPlugin/Plugin.vala
 plugins/CalculatorPlugin/Plugin.vala
 plugins/FilePlugin/Plugin.vala
 plugins/LocationPlugin/Plugin.vala
+plugins/WebSearchPlugin/Plugin.vala
