@@ -38,6 +38,8 @@ public class Detective.CalculatorProvider : SearchProvider {
     }
 
     private async void search_internal (Query query) {
+        matches_internal.remove_all ();
+
         try {
             string d = yield backend.get_solution (
                 query.search_term,
@@ -47,7 +49,6 @@ public class Detective.CalculatorProvider : SearchProvider {
             var icon = new ThemedIcon ("accessories-calculator");
             var match = new Match ( 0, d, null, icon, null);
 
-            matches_internal.remove_all ();
             matches_internal.append (match);
         } catch (Error e) {
             if (!(e is IOError.FAILED_HANDLED)) {
