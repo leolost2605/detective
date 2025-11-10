@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
+ */
+
 public class Detective.Query : Object {
     public string search_term { get; construct; }
     public string[] search_tokens { get; construct; }

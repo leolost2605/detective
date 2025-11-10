@@ -1,3 +1,7 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
+ */
 
 // This whole thing is just for testing
 public class Detective.TrackerProvider : SearchProvider {

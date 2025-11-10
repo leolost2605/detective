@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
+ */
+
 public abstract class Detective.SearchProvider : Object {
     public ListModel match_types { get; set; }
 
