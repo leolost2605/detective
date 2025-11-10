@@ -70,6 +70,7 @@ public class Detective.AppsProvider : SearchProvider {
     public static MatchType match_type_apps;
 
     private string[] paths = {
+        Environment.get_home_dir () + "/.local/share",
         Environment.get_home_dir () + "/.local/share/flatpak/exports/share",
         "/var/lib/flatpak/exports/share",
         "/var/lib/snapd/desktop"
@@ -92,9 +93,7 @@ public class Detective.AppsProvider : SearchProvider {
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
             var match = (AppMatch) obj;
             return query != null ? match.set_relevancy (query) > 0 : false;
-        })) {
-            incremental = true
-        };
+        }));
 
         match_type_apps = new MatchType (_("Applications"), filter_list_model);
 
