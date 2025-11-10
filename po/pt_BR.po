@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.leolost2605.detective\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-09 15:00-0300\n"
-"PO-Revision-Date: 2025-11-09 15:00-0300\n"
+"POT-Creation-Date: 2024-06-26 22:20+0200\n"
+"PO-Revision-Date: 2025-11-10 02:05-0300\n"
 "Last-Translator: Fernando Júnior Gomes da Silva <fernandojunior20110@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -70,3 +70,23 @@ msgstr "Arquivos"
 #: plugins/LocationPlugin/Plugin.vala:33
 msgid "Places"
 msgstr "Locais"
+
+#. Translators: %s is the search query, %s is the search engine name
+#: plugins/WebSearchPlugin/Plugin.vala:15
+#, c-format
+msgid "Search \"%s\" on %s"
+msgstr "Pesquisar \"%s\" no %s"
+
+#. Translators: %s is the URL to open
+#: plugins/WebSearchPlugin/Plugin.vala:40
+#, c-format
+msgid "Open %s"
+msgstr "Abrir %s"
+
+#: plugins/WebSearchPlugin/Plugin.vala:46
+msgid "Open URL in browser"
+msgstr "Abrir URL no navegador"
+
+#: plugins/WebSearchPlugin/Plugin.vala:74
+msgid "Web Search"
+msgstr "Busca na Web"
