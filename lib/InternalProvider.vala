@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
+ */
+
 public class Detective.InternalProvider : SearchProvider {
     private ListStore results;
     private Gtk.FilterListModel filter_model;
