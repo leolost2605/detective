@@ -7,7 +7,6 @@ sources = [
 
 if desktopintegration
     sources += 'DesktopIntegration.vala'
-    add_project_arguments(['--define', 'DESKTOP_INTEGRATION'], language: 'vala')
 endif
 
 shared_library(
