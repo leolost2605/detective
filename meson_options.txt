@@ -1,1 +1,1 @@
-option ('desktopintegration', type : 'boolean', value : true)
+option ('desktopintegration', type : 'boolean', value : false)
