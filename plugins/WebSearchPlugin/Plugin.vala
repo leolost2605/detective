@@ -77,6 +77,66 @@ public class Detective.WebSearchProvider : SearchProvider {
         this.match_types = match_types;
     }
 
+    private bool is_ipv4 (string text) {
+        var parts = text.split (".");
+        if (parts.length != 4) {
+            return false;
+        }
+
+        foreach (var part in parts) {
+            if (part.length == 0 || part.length > 3) {
+                return false;
+            }
+
+            for (int i = 0; i < part.length; i++) {
+                unichar c = part.get_char (i);
+                if (c < '0' || c > '9') {
+                    return false;
+                }
+            }
+
+            int val = int.parse (part);
+            if (val < 0 || val > 255) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool is_ipv6 (string text) {
+        if (!text.contains (":")) {
+            return false;
+        }
+
+        var parts = text.split (":");
+        if (parts.length < 2 || parts.length > 8) {
+            return false;
+        }
+
+        foreach (var part in parts) {
+            if (part.length == 0) {
+                continue;
+            }
+
+            if (part.length > 4) {
+                return false;
+            }
+
+            for (int i = 0; i < part.length; i++) {
+                unichar c = part.get_char (i);
+                bool is_hex = (c >= '0' && c <= '9') ||
+                             (c >= 'a' && c <= 'f') ||
+                             (c >= 'A' && c <= 'F');
+                if (!is_hex) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private bool is_url (string text) {
         if (text.has_prefix ("http://") || text.has_prefix ("https://")) {
             return true;
@@ -90,10 +150,33 @@ public class Detective.WebSearchProvider : SearchProvider {
             return true;
         }
 
-        // Check generic domain pattern: contains at least one dot
-        // followed by 2-6 alphabetic characters (typical TLD: .com, .br, .museum)
-        if (text.contains (".")) {
-            var parts = text.split (".");
+        string base_part = text;
+
+        if (base_part.contains ("?")) {
+            base_part = base_part.split ("?")[0];
+        }
+
+        if (base_part.contains ("/")) {
+            base_part = base_part.split ("/")[0];
+        }
+
+        if (base_part.contains (":")) {
+            if (is_ipv6 (base_part)) {
+                return true;
+            }
+            base_part = base_part.split (":")[0];
+        }
+
+        if (is_ipv4 (base_part)) {
+            return true;
+        }
+
+        if (is_ipv6 (base_part)) {
+            return true;
+        }
+
+        if (base_part.contains (".")) {
+            var parts = base_part.split (".");
             if (parts.length >= 2) {
                 // Get the last part (TLD)
                 string tld = parts[parts.length - 1].down ();
