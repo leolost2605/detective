@@ -53,8 +53,12 @@ msgstr ""
 msgid "Unknown Match"
 msgstr ""
 
-#: plugins/AppsPlugin/Plugin.vala:99
+#: plugins/AppsPlugin/Plugin.vala:165
 msgid "Applications"
+msgstr ""
+
+#: plugins/AppsPlugin/Plugin.vala:166
+msgid "Application Actions"
 msgstr ""
 
 #: plugins/CalculatorPlugin/Plugin.vala:32

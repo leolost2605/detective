@@ -38,11 +38,7 @@ public class Detective.AppMatch : Match {
         }
 
         relevancy = int.min (relevancy, Relevancy.HIGHEST);
-
-        if (relevancy > 0) {
-            var recency_relevancy = (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * Relevancy.HIGHEST);
-            relevancy = (relevancy * 2 + recency_relevancy) / 3;
-        }
+        relevancy = AppsProvider.calculate_relevancy_with_recency (relevancy, app_id);
 
         this.relevancy = relevancy;
 
@@ -62,12 +58,87 @@ public class Detective.AppMatch : Match {
         }
 #endif
 
-        Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
+        var app_info = new DesktopAppInfo (app_id);
+        if (app_info != null) {
+            app_info.launch (null, null);
+        } else {
+            Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
+        }
+    }
+}
+
+public class Detective.AppActionMatch : Match {
+    public string app_id { get; construct; }
+    public string action_name { get; construct; }
+    public string exec { get; construct; }
+    public string app_title { get; construct; }
+
+    private string[] title_tokens;
+    private string[] app_title_tokens;
+
+    public AppActionMatch (string app_id, string action_name, string action_title, string app_title, Icon? icon, string exec) {
+        Object (
+            relevancy: 0,
+            app_id: app_id,
+            action_name: action_name,
+            title: action_title,
+            app_title: app_title,
+            description: null,
+            icon: icon,
+            exec: exec
+        );
+    }
+
+    construct {
+        title_tokens = title.tokenize_and_fold (null, null);
+        app_title_tokens = app_title.tokenize_and_fold (null, null);
+    }
+
+    public int set_relevancy (Query query) {
+        const int title_weight = Relevancy.HIGHEST;
+        const int app_title_weight = Relevancy.LOW;
+
+        int relevancy = 0;
+
+        // Match against action title
+        relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, title_tokens, title_weight);
+
+        // Match against app title
+        relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, app_title_tokens, app_title_weight);
+
+        relevancy = int.min (relevancy, Relevancy.HIGHEST);
+        relevancy = AppsProvider.calculate_relevancy_with_recency (relevancy, app_id);
+
+        this.relevancy = relevancy;
+
+        return relevancy;
+    }
+
+    public override async void activate () throws Error {
+        RelevancyService.get_default ().app_launched (app_id);
+
+        var app_info = new DesktopAppInfo (app_id);
+        if (app_info != null) {
+            app_info.launch_action (action_name, null);
+        } else {
+            Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
+        }
     }
 }
 
 public class Detective.AppsProvider : SearchProvider {
     public static MatchType match_type_apps;
+    public static MatchType match_type_app_actions;
+
+    // Helper method to calculate relevancy with recency
+    public static int calculate_relevancy_with_recency (int base_relevancy, string app_id) {
+        if (base_relevancy <= 0) {
+            return 0;
+        }
+
+        var recency_relevancy = (int) (RelevancyService.get_default ().get_app_relevancy (app_id) * Relevancy.HIGHEST);
+        return (base_relevancy * 2 + recency_relevancy) / 3;
+    }
 
     private string[] paths = {
         Environment.get_home_dir () + "/.local/share",
@@ -79,6 +150,7 @@ public class Detective.AppsProvider : SearchProvider {
     private GenericSet<string> found_desktop_ids = new GenericSet<string> (str_hash, str_equal);
 
     private ListStore list_store;
+    private ListStore actions_list_store;
     private Query? query;
 
     private Regex exec_field_codes_regex;
@@ -89,16 +161,24 @@ public class Detective.AppsProvider : SearchProvider {
         RelevancyService.get_default (); // Init file loading
 
         list_store = new ListStore (typeof (AppMatch));
+        actions_list_store = new ListStore (typeof (AppActionMatch));
 
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
             var match = (AppMatch) obj;
             return query != null ? match.set_relevancy (query) > 0 : false;
         }));
 
+        var actions_filter_list_model = new Gtk.FilterListModel (actions_list_store, new Gtk.CustomFilter ((obj) => {
+            var match = (AppActionMatch) obj;
+            return query != null ? match.set_relevancy (query) > 0 : false;
+        }));
+
         match_type_apps = new MatchType (_("Applications"), filter_list_model);
+        match_type_app_actions = new MatchType (_("Application Actions"), actions_filter_list_model);
 
         var match_types_list_store = new ListStore (typeof (MatchType));
         match_types_list_store.append (match_type_apps);
+        match_types_list_store.append (match_type_app_actions);
 
         match_types = match_types_list_store;
 
@@ -314,16 +394,63 @@ public class Detective.AppsProvider : SearchProvider {
 
         list_store.append (new AppMatch (app_id, title, description, icon, exec, keywords));
         found_desktop_ids.add (app_id);
+
+        try {
+            if (key_file.has_key ("Desktop Entry", "Actions")) {
+                var actions_string = key_file.get_string ("Desktop Entry", "Actions");
+                var action_ids = actions_string.split (";");
+
+                foreach (var action_id in action_ids) {
+                    if (action_id.strip () == "") {
+                        continue;
+                    }
+
+                    var group_name = "Desktop Action " + action_id;
+                    if (!key_file.has_group (group_name)) {
+                        continue;
+                    }
+
+                    string? action_name = null;
+                    try {
+                        action_name = key_file.get_locale_string (group_name, "Name", null);
+                    } catch (Error e) {
+                        debug ("Failed to get action name for %s: %s", action_id, e.message);
+                        continue;
+                    }
+
+                    string? action_exec = null;
+                    try {
+                        action_exec = exec_field_codes_regex.replace (
+                            key_file.get_value (group_name, "Exec"),
+                            -1,
+                            0,
+                            ""
+                        );
+                    } catch (Error e) {
+                        debug ("Failed to get action exec for %s: %s", action_id, e.message);
+                        continue;
+                    }
+
+                    actions_list_store.append (
+                        new AppActionMatch (app_id, action_id, action_name, title, icon, action_exec)
+                    );
+                }
+            }
+        } catch (Error e) {
+            debug ("Failed to parse actions for %s: %s", app_id, e.message);
+        }
     }
 
     public override void search (Query query) {
         this.query = query;
         list_store.items_changed (0, list_store.n_items, list_store.n_items);
+        actions_list_store.items_changed (0, actions_list_store.n_items, actions_list_store.n_items);
     }
 
     public override void clear () {
         this.query = null;
         list_store.items_changed (0, list_store.n_items, list_store.n_items);
+        actions_list_store.items_changed (0, actions_list_store.n_items, actions_list_store.n_items);
     }
 }
 
