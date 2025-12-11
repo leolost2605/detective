@@ -68,3 +68,22 @@ msgstr ""
 #: plugins/LocationPlugin/Plugin.vala:33
 msgid "Places"
 msgstr ""
+
+#. Translators: %s is the search query, %s is the search engine name
+#: plugins/WebSearchPlugin/Plugin.vala:15
+#, c-format
+msgid "Search \"%s\" on %s"
+msgstr ""
+
+#. Translators: %s is the URL to open
+#: plugins/WebSearchPlugin/Plugin.vala:40
+#, c-format
+msgid "Open %s"
+msgstr ""
+
+#: plugins/WebSearchPlugin/Plugin.vala:46
+msgid "Open URL in browser"
+msgstr ""
+
+#: plugins/WebSearchPlugin/Plugin.vala:74
+msgid "Web Search"
