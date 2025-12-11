@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-49
+      options: --privileged
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      with:
+        # This is the name of the Bundle file we're building and can be anything you like
+        bundle: 'Detective.flatpak'
+        # This uses your app's RDNN ID
+        manifest-path: io.github.leolost2605.detective.yml
+
+        # You can automatically run any of the tests you've created as part of this workflow
+        run-tests: true
+
+        # These lines specify the location of the elementary Runtime and Sdk
+        repository-name: appcenter
+        repository-url: https://flatpak.elementary.io/repo.flatpakrepo
+        cache-key: "flatpak-builder-${{ github.sha }}"
