@@ -1,4 +1,5 @@
 subdir('AppsPlugin')
 subdir('CalculatorPlugin')
 subdir('FilePlugin')
-subdir('LocationPlugin')
+# Don't include location plugin for now as performance is bad
+# subdir('LocationPlugin')
