@@ -25,7 +25,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             margin_start = 6,
             margin_end = 6,
             placeholder_text = _("Search apps, files and more..."),
-            search_delay = 100
+            search_delay = 0
         };
 
         selection_model = new Gtk.SingleSelection (engine.matches) {
