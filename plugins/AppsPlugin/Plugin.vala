@@ -100,10 +100,10 @@ public class Detective.AppActionMatch : Result {
 
         int relevancy = 0;
 
-        // Result against action title
+        // Match against action title
         relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, title_tokens, title_weight);
 
-        // Result against app title
+        // Match against app title
         relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, app_title_tokens, app_title_weight);
 
         relevancy = int.min (relevancy, Relevancy.HIGHEST);
