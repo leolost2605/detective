@@ -33,7 +33,7 @@ internal class Detective.ResultType : Object {
     private void on_items_changed (uint position, uint removed, uint added) {
         for (uint i = position; i < position + added; i++) {
             var result = (Result) results.get_item (i);
-            result.match_type_name = name;
+            result.result_type_name = name;
         }
 
         if (position == 0) {

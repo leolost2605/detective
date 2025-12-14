@@ -28,7 +28,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             search_delay = 0
         };
 
-        selection_model = new Gtk.SingleSelection (engine.matches) {
+        selection_model = new Gtk.SingleSelection (engine.results) {
             autoselect = false,
             can_unselect = true
         };
@@ -93,7 +93,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         entry.activate.connect (on_entry_activated);
         entry.stop_search.connect (close);
 
-        list_view.activate.connect (activate_match);
+        list_view.activate.connect (activate_result);
 
         var key_controller = new Gtk.EventControllerKey ();
         key_controller.key_pressed.connect (on_key_pressed);
@@ -104,13 +104,13 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
     private void on_row_setup (Object obj) {
         var list_item = (Gtk.ListItem) obj;
-        list_item.child = new MatchRow ();
+        list_item.child = new ResultRow ();
     }
 
     private void on_row_bind (Object obj) {
         var list_item = (Gtk.ListItem) obj;
         var item = (Result) list_item.item;
-        ((MatchRow) list_item.child).bind (item);
+        ((ResultRow) list_item.child).bind (item);
     }
 
     private void on_header_setup (Object obj) {
@@ -121,7 +121,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     private void on_header_bind (Object obj) {
         var list_header = (Gtk.ListHeader) obj;
         var item = (Result) list_header.item;
-        ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
+        ((Granite.HeaderLabel) list_header.child).label = item.result_type_name;
     }
 
     private void on_is_active_changed () {
@@ -137,11 +137,11 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     }
 
     private void on_entry_activated () {
-        activate_match.begin (selection_model.selected);
+        activate_result.begin (selection_model.selected);
     }
 
-    private async void activate_match (uint position) {
-        var result = (Result) engine.matches.get_item (position);
+    private async void activate_result (uint position) {
+        var result = (Result) engine.results.get_item (position);
 
         if (result == null) {
             return;
