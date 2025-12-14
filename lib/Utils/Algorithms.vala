@@ -69,7 +69,7 @@ namespace Detective.Algorithms {
             var search_n_chars = search_token.char_count ();
 
             foreach (var compare_token in compare_tokens) {
-                // We don't match the whole compare token but only the prefix of length search_token.char_cout ()
+                // We don't result the whole compare token but only the prefix of length search_token.char_cout ()
                 // This allows search as you type and automatically applies penalties if we are too far in the middle
                 // Idk if that makes sense but it feels good when using :)
                 if (search_n_chars < compare_token.char_count ()) {

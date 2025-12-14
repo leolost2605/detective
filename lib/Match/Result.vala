@@ -11,18 +11,18 @@ namespace Detective.Relevancy {
     public const int LOWEST = 1;
 }
 
-public class Detective.Match : Object {
-    // Will be automatically set by the MatchType this match is added to
+public class Detective.Result : Object {
+    // Will be automatically set by the MatchType this result is added to
     public string match_type_name { get; internal set; }
 
     public int relevancy { get; construct set; default = 0; }
-    public string title { get; construct set; default = _("Unknown Match"); }
+    public string title { get; construct set; default = _("Unknown Result"); }
 
     public string? description { get; construct set; }
     public Icon? icon { get; construct set; }
     public Gdk.Paintable? paintable { get; construct set; }
 
-    public Match (int relevancy, string title, string? description, Icon? icon, Gdk.Paintable? paintable) {
+    public Result (int relevancy, string title, string? description, Icon? icon, Gdk.Paintable? paintable) {
         Object (
             relevancy: relevancy,
             title: title,
@@ -37,6 +37,6 @@ public class Detective.Match : Object {
     }
 
     public virtual async void activate () throws Error {
-        debug ("Activated match without activate func");
+        debug ("Activated result without activate func");
     }
 }

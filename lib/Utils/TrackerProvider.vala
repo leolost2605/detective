@@ -9,7 +9,7 @@ public class Detective.TrackerProvider : SearchProvider {
     public string query { get; construct; }
     public string match_type_name { get; construct; }
 
-    public delegate Match CreateMatchFunc (Tracker.Sparql.Cursor cursor);
+    public delegate Result CreateMatchFunc (Tracker.Sparql.Cursor cursor);
 
     private Tracker.Sparql.Connection tracker_connection;
 
@@ -49,12 +49,12 @@ public class Detective.TrackerProvider : SearchProvider {
                 }
 
                 if (results == null) {
-                    results = new ListStore (typeof (Match));
+                    results = new ListStore (typeof (Result));
                     aggregator.register_result_type (match_type_name, results, false);
                 }
 
-                var match = create_match_func (cursor);
-                results.append (match);
+                var result = create_match_func (cursor);
+                results.append (result);
             }
 
             cursor.close ();

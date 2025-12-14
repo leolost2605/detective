@@ -1,4 +1,4 @@
-public class Detective.LocationMatch : Match {
+public class Detective.LocationMatch : Result {
     private static LocationPreview preview = new LocationPreview ();
 
     public Geocode.Place place { get; construct; }
