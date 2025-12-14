@@ -3,10 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
-// This whole thing is just for testing
 public class Detective.TrackerProvider : SearchProvider {
-    public signal void cleared ();
-
     // Needs to have exactly one printf style %s for the search term and
     // one prinf style %d for the maximum number of results
     public string query { get; construct; }
@@ -14,9 +11,6 @@ public class Detective.TrackerProvider : SearchProvider {
 
     public delegate Match CreateMatchFunc (Tracker.Sparql.Cursor cursor);
 
-    private Query search_query;
-
-    private ListStore matches;
     private Tracker.Sparql.Connection tracker_connection;
 
     private unowned CreateMatchFunc create_match_func;
@@ -28,8 +22,6 @@ public class Detective.TrackerProvider : SearchProvider {
     }
 
     construct {
-        matches = new ListStore (typeof (Match));
-
         try {
             tracker_connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null, null);
         } catch (Error e) {
@@ -38,21 +30,11 @@ public class Detective.TrackerProvider : SearchProvider {
         }
     }
 
-    public override void register_with_aggregator (ResultAggregator aggregator) {
-        aggregator.register_result_type (match_type_name, matches);
-    }
-
     internal override void search (Query search_query, ResultAggregator aggregator) {
-        this.search_query = search_query;
-        search_tracker.begin ();
+        search_tracker.begin (search_query, aggregator);
     }
 
-    internal override void clear () {
-        matches.remove_all ();
-        cleared ();
-    }
-
-    private async void search_tracker () {
+    private async void search_tracker (Query search_query, ResultAggregator aggregator) {
         try {
             var tracker_statement_id = tracker_connection.query_statement (
                 query.printf (search_query.search_term, search_query.n_results)
@@ -60,23 +42,25 @@ public class Detective.TrackerProvider : SearchProvider {
 
             var cursor = yield tracker_statement_id.execute_async (search_query.cancellable);
 
-            clear ();
-
-            Match[] matches = {};
+            ListStore? results = null;
             while (yield cursor.next_async ()) {
                 if (search_query.cancelled) {
                     throw new IOError.CANCELLED ("Search was cancelled");
                 }
 
+                if (results == null) {
+                    results = new ListStore (typeof (Match));
+                    aggregator.register_result_type (match_type_name, results, false);
+                }
+
                 var match = create_match_func (cursor);
-                matches += match;
+                results.append (match);
             }
-            this.matches.splice (0, 0, matches);
 
             cursor.close ();
         } catch (Error e) {
             if (e is IOError.CANCELLED) {
-                matches.remove_all ();
+                // Ignore
             } else {
                 warning (e.message);
             }
