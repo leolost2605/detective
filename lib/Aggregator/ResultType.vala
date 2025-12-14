@@ -23,14 +23,7 @@ internal class Detective.ResultType : Object {
     public ListModel results { get; construct; }
 
     public ResultType (string name, ListModel results) {
-        var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Match), null, "relevancy")) {
-            sort_order = DESCENDING
-        };
-
-        var sort_model = new Gtk.SortListModel (results, relevancy_sorter);
-        var slice_model = new Gtk.SliceListModel (sort_model, 0, 5);
-
-        Object (name: name, results: slice_model);
+        Object (name: name, results: results);
     }
 
     construct {

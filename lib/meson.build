@@ -9,6 +9,7 @@ sources = [
     'Match' / 'SearchProvider.vala',
     'Utils' / 'Algorithms.vala',
     'Utils' / 'TrackerProvider.vala',
+    'Utils' / 'Utils.vala',
 ]
 
 libdetective_deps = [
