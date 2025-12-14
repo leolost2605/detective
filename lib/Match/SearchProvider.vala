@@ -10,7 +10,7 @@ public abstract class Detective.SearchProvider : Object {
      * given when registering a result type should then be updated on every call to {@link search}.
      * See {@link ResultAggregator.register_result_type}.
      */
-    public abstract void register_with_aggregator (ResultAggregator aggregator);
+    public virtual void register_with_aggregator (ResultAggregator aggregator) {}
 
     /**
      * Called when the search term changes. The SearchProvider implementation
@@ -26,5 +26,5 @@ public abstract class Detective.SearchProvider : Object {
      * any ongoing queries, remove all matches from the list and treat a new call to search
      * as a completely separate search.
      */
-    public abstract void clear ();
+    public virtual void clear () {}
 }
