@@ -21,11 +21,9 @@
 */
 
 public class Detective.CalculatorProvider : SearchProvider {
-    private CalculatorPluginBackend backend;
     private ListStore matches_internal;
 
     construct {
-        backend = new CalculatorPluginBackend ();
         matches_internal = new ListStore (typeof (Match));
     }
 
@@ -41,20 +39,32 @@ public class Detective.CalculatorProvider : SearchProvider {
         matches_internal.remove_all ();
 
         try {
-            string d = yield backend.get_solution (
-                query.search_term,
-                query.cancellable
-            ); // throws error if no valid solution found
+            var result = yield get_solution (query.search_term,  query.cancellable);
 
             var icon = new ThemedIcon ("accessories-calculator");
-            var match = new Match ( 0, d, null, icon, null);
+            var match = new Match ( 0, result, null, icon, null);
 
             matches_internal.append (match);
         } catch (Error e) {
-            if (!(e is IOError.FAILED_HANDLED)) {
-                warning ("Error processing %s with bc: %s", query.search_term, e.message);
+            if (!(e is IOError.FAILED_HANDLED) && !(e is IOError.CANCELLED)) {
+                warning ("Error processing %s with math parse: %s", query.search_term, e.message);
             }
         }
+    }
+
+    private async string get_solution (string query_string, Cancellable cancellable) throws Error {
+        string[] argv = { "run_mathparse.py", query_string };
+
+        var subprocess = new Subprocess.newv (argv, STDOUT_PIPE | STDERR_SILENCE);
+
+        string result;
+        yield subprocess.communicate_utf8_async (null, cancellable, out result, null);
+
+        if (subprocess.get_exit_status () != 0) {
+            throw new IOError.FAILED_HANDLED ("No valid solution found");
+        }
+
+        return result.strip ();
     }
 
     public override void clear () {

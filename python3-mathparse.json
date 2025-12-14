@@ -1,0 +1,14 @@
+{
+    "name": "python3-mathparse",
+    "buildsystem": "simple",
+    "build-commands": [
+        "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"mathparse\" --no-build-isolation"
+    ],
+    "sources": [
+        {
+            "type": "file",
+            "url": "https://files.pythonhosted.org/packages/e7/1b/6b9aca6884627efc1a94c301b257ce9a563a324c7a540c92548f6f7e5701/mathparse-0.2.7-py3-none-any.whl",
+            "sha256": "1f43353c4e1384d0d16cf84850d759d38434c48ff0c9d948844fe388d6f2b2fa"
+        }
+    ]
+}
