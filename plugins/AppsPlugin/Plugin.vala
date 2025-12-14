@@ -434,7 +434,7 @@ public class Detective.AppsProvider : SearchProvider {
         aggregator.register_result_type (_("Application Actions"), Utils.create_sort_and_slice_model (actions_filter_list_model));
     }
 
-    public override void search (Query query) {
+    public override void search (Query query, ResultAggregator aggregator) {
         this.query = query;
         list_store.items_changed (0, list_store.n_items, list_store.n_items);
         actions_list_store.items_changed (0, actions_list_store.n_items, actions_list_store.n_items);

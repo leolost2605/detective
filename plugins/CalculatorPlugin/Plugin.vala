@@ -31,7 +31,7 @@ public class Detective.CalculatorProvider : SearchProvider {
         aggregator.register_result_type (_("Calculation"), matches_internal);
     }
 
-    public override void search (Query query) {
+    public override void search (Query query, ResultAggregator aggregator) {
         search_internal.begin (query);
     }
 

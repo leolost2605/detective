@@ -23,7 +23,7 @@ public class Detective.InternalProvider : SearchProvider {
         aggregator.register_result_type (_("Detective"), filter_model);
     }
 
-    public override void search (Query query) {
+    public override void search (Query query, ResultAggregator aggregator) {
         filter_model.model = results;
         filter.search = query.search_term;
     }
