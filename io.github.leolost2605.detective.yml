@@ -71,6 +71,8 @@ modules:
               type: git
               tag-pattern: ^v([\d.]+)$
 
+  - python3-mathparse.json
+
   - name: Detective
     buildsystem: meson
     sources:
