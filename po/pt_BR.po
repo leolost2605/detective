@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: io.github.leolost2605.detective\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-09 15:00-0300\n"
-"PO-Revision-Date: 2025-11-09 15:00-0300\n"
+"PO-Revision-Date: 2025-11-11 01:04-0300\n"
 "Last-Translator: Fernando Júnior Gomes da Silva <fernandojunior20110@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -55,9 +55,13 @@ msgstr "Buscar aplicativos, arquivos e mais..."
 msgid "Unknown Match"
 msgstr "Correspondência Desconhecida"
 
-#: plugins/AppsPlugin/Plugin.vala:99
+#: plugins/AppsPlugin/Plugin.vala:165
 msgid "Applications"
 msgstr "Aplicativos"
+
+#: plugins/AppsPlugin/Plugin.vala:166
+msgid "Application Actions"
+msgstr "Ações de Aplicativos"
 
 #: plugins/CalculatorPlugin/Plugin.vala:32
 msgid "Calculation"
