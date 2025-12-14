@@ -4,25 +4,25 @@
  */
 
 /**
- * Specifies the type of a match. Matches of the same type are grouped together.
+ * Specifies the type of a result. Results of the same type are grouped together.
  */
-public class Detective.MatchType : Object {
+internal class Detective.ResultType : Object {
     /**
-     * The name of the MatchType. Shown to the user in a header.
+     * The name of the ResultType. Shown to the user in a header.
      */
     public string name { get; construct; }
 
     /**
-     * The relevancy of the best match this type currently has.
+     * The relevancy of the best result this type currently has.
      */
-    public int best_match_relevancy { get; private set; }
+    public int best_result_relevancy { get; private set; }
 
     /**
-     * The matches that belong to this match type.
+     * The results that belong to this result type.
      */
     public ListModel results { get; construct; }
 
-    public MatchType (string name, ListModel results) {
+    public ResultType (string name, ListModel results) {
         var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Match), null, "relevancy")) {
             sort_order = DESCENDING
         };
@@ -44,7 +44,7 @@ public class Detective.MatchType : Object {
         }
 
         if (position == 0) {
-            best_match_relevancy = results.get_n_items () > 0 ? ((Match) results.get_item (0)).relevancy : 0;
+            best_result_relevancy = results.get_n_items () > 0 ? ((Match) results.get_item (0)).relevancy : 0;
         }
     }
 }

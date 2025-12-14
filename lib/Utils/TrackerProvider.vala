@@ -29,17 +29,16 @@ public class Detective.TrackerProvider : SearchProvider {
     construct {
         matches = new ListStore (typeof (Match));
 
-        var match_types = new ListStore (typeof (MatchType));
-        match_types.append (new MatchType (match_type_name, matches));
-
-        this.match_types = match_types;
-
         try {
             tracker_connection = Tracker.Sparql.Connection.bus_new ("org.freedesktop.Tracker3.Miner.Files", null, null);
         } catch (Error e) {
             // TODO: Maybe send notification?
             warning (e.message);
         }
+    }
+
+    public override void register_with_aggregator (ResultAggregator aggregator) {
+        aggregator.register_result_type (match_type_name, matches);
     }
 
     internal override void search (Query search_query) {

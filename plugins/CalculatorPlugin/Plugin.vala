@@ -27,10 +27,10 @@ public class Detective.CalculatorProvider : SearchProvider {
     construct {
         backend = new CalculatorPluginBackend ();
         matches_internal = new ListStore (typeof (Match));
+    }
 
-        var match_types = new ListStore (typeof (MatchType));
-        match_types.append (new MatchType (_("Calculation"), matches_internal));
-        this.match_types = match_types;
+    public override void register_with_aggregator (ResultAggregator aggregator) {
+        aggregator.register_result_type (_("Calculation"), matches_internal);
     }
 
     public override void search (Query query) {

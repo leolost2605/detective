@@ -127,9 +127,6 @@ public class Detective.AppActionMatch : Match {
 }
 
 public class Detective.AppsProvider : SearchProvider {
-    public static MatchType match_type_apps;
-    public static MatchType match_type_app_actions;
-
     // Helper method to calculate relevancy with recency
     public static int calculate_relevancy_with_recency (int base_relevancy, string app_id) {
         if (base_relevancy <= 0) {
@@ -162,25 +159,6 @@ public class Detective.AppsProvider : SearchProvider {
 
         list_store = new ListStore (typeof (AppMatch));
         actions_list_store = new ListStore (typeof (AppActionMatch));
-
-        var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
-            var match = (AppMatch) obj;
-            return query != null ? match.set_relevancy (query) > 0 : false;
-        }));
-
-        var actions_filter_list_model = new Gtk.FilterListModel (actions_list_store, new Gtk.CustomFilter ((obj) => {
-            var match = (AppActionMatch) obj;
-            return query != null ? match.set_relevancy (query) > 0 : false;
-        }));
-
-        match_type_apps = new MatchType (_("Applications"), filter_list_model);
-        match_type_app_actions = new MatchType (_("Application Actions"), actions_filter_list_model);
-
-        var match_types_list_store = new ListStore (typeof (MatchType));
-        match_types_list_store.append (match_type_apps);
-        match_types_list_store.append (match_type_app_actions);
-
-        match_types = match_types_list_store;
 
         try {
             exec_field_codes_regex = new Regex ("(?<!%)%.");
@@ -439,6 +417,21 @@ public class Detective.AppsProvider : SearchProvider {
         } catch (Error e) {
             debug ("Failed to parse actions for %s: %s", app_id, e.message);
         }
+    }
+
+    public override void register_with_aggregator (ResultAggregator aggregator) {
+        var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
+            var match = (AppMatch) obj;
+            return query != null ? match.set_relevancy (query) > 0 : false;
+        }));
+
+        var actions_filter_list_model = new Gtk.FilterListModel (actions_list_store, new Gtk.CustomFilter ((obj) => {
+            var match = (AppActionMatch) obj;
+            return query != null ? match.set_relevancy (query) > 0 : false;
+        }));
+
+        aggregator.register_result_type (_("Applications"), filter_list_model);
+        aggregator.register_result_type (_("Application Actions"), actions_filter_list_model);
     }
 
     public override void search (Query query) {

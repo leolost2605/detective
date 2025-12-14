@@ -4,7 +4,13 @@
  */
 
 public abstract class Detective.SearchProvider : Object {
-    public ListModel match_types { get; set; }
+    /**
+     * This will be called before any call to {@link search}. The implementation
+     * should register its result types with the given aggregator. The result listmodel
+     * given when registering a result type should then be updated on every call to {@link search}.
+     * See {@link ResultAggregator.register_result_type}.
+     */
+    public abstract void register_with_aggregator (ResultAggregator aggregator);
 
     /**
      * Called when the search term changes. The SearchProvider implementation
