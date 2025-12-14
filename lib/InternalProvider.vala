@@ -8,7 +8,7 @@ public class Detective.InternalProvider : SearchProvider {
     private Gtk.FilterListModel filter_model;
     private Gtk.StringFilter filter;
 
-    construct {
+    public override void register_with_aggregator (ResultAggregator aggregator) {
         results = new ListStore (typeof (Match));
 
         filter = new Gtk.StringFilter (new Gtk.PropertyExpression (typeof (Match), null, "title")) {
@@ -20,10 +20,7 @@ public class Detective.InternalProvider : SearchProvider {
             incremental = true
         };
 
-        var match_types = new ListStore (typeof (MatchType));
-        match_types.append (new MatchType (_("Detective"), filter_model));
-
-        this.match_types = match_types;
+        aggregator.register_result_type (_("Detective"), filter_model);
     }
 
     public override void search (Query query) {
