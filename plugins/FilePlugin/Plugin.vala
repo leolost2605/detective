@@ -24,7 +24,7 @@ public static Detective.TrackerProvider get_provider () {
                 fts:match "%s"
             }
         } ORDER BY fts:rank(?r)
-          LIMIT 50
+          LIMIT %d
     """;
 
     var provider = new Detective.TrackerProvider (query, _("Files"), (cursor) => {

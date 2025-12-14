@@ -430,8 +430,8 @@ public class Detective.AppsProvider : SearchProvider {
             return query != null ? match.set_relevancy (query) > 0 : false;
         }));
 
-        aggregator.register_result_type (_("Applications"), filter_list_model);
-        aggregator.register_result_type (_("Application Actions"), actions_filter_list_model);
+        aggregator.register_result_type (_("Applications"), Utils.create_sort_and_slice_model (filter_list_model));
+        aggregator.register_result_type (_("Application Actions"), Utils.create_sort_and_slice_model (actions_filter_list_model));
     }
 
     public override void search (Query query) {

@@ -7,7 +7,8 @@
 public class Detective.TrackerProvider : SearchProvider {
     public signal void cleared ();
 
-    // Needs to have exactly one printf style %s for the search term
+    // Needs to have exactly one printf style %s for the search term and
+    // one prinf style %d for the maximum number of results
     public string query { get; construct; }
     public string match_type_name { get; construct; }
 
@@ -54,7 +55,7 @@ public class Detective.TrackerProvider : SearchProvider {
     private async void search_tracker () {
         try {
             var tracker_statement_id = tracker_connection.query_statement (
-                query.printf (search_query.search_term)
+                query.printf (search_query.search_term, search_query.n_results)
             );
 
             var cursor = yield tracker_statement_id.execute_async (search_query.cancellable);
