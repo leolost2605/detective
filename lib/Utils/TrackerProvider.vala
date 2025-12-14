@@ -7,18 +7,18 @@ public class Detective.TrackerProvider : SearchProvider {
     // Needs to have exactly one printf style %s for the search term and
     // one prinf style %d for the maximum number of results
     public string query { get; construct; }
-    public string match_type_name { get; construct; }
+    public string result_type_name { get; construct; }
 
-    public delegate Result CreateMatchFunc (Tracker.Sparql.Cursor cursor);
+    public delegate Result CreateResultFunc (Tracker.Sparql.Cursor cursor);
 
     private Tracker.Sparql.Connection tracker_connection;
 
-    private unowned CreateMatchFunc create_match_func;
+    private unowned CreateResultFunc create_result_func;
 
-    public TrackerProvider (string query, string match_type_name, CreateMatchFunc create_match_func) {
-        Object (query: query, match_type_name: match_type_name);
+    public TrackerProvider (string query, string result_type_name, CreateResultFunc create_result_func) {
+        Object (query: query, result_type_name: result_type_name);
 
-        this.create_match_func = create_match_func;
+        this.create_result_func = create_result_func;
     }
 
     construct {
@@ -50,10 +50,10 @@ public class Detective.TrackerProvider : SearchProvider {
 
                 if (results == null) {
                     results = new ListStore (typeof (Result));
-                    aggregator.register_result_type (match_type_name, results, false);
+                    aggregator.register_result_type (result_type_name, results, false);
                 }
 
-                var result = create_match_func (cursor);
+                var result = create_result_func (cursor);
                 results.append (result);
             }
 

@@ -14,16 +14,16 @@ public abstract class Detective.SearchProvider : Object {
 
     /**
      * Called when the search term changes. The SearchProvider implementation
-     * is responsible for caching previous search terms and updating the matches
+     * is responsible for caching previous search terms and updating the results
      * accordingly. If a search was ended completly by the user clear is called
-     * meaning the implementation should remove all matches from the model and treat
+     * meaning the implementation should remove all results from the model and treat
      * a new call to search as a completely separate search.
      */
     public abstract void search (Query query, ResultAggregator aggregator);
 
     /**
      * Called when a current search is ended by the user. The implementation should cancel
-     * any ongoing queries, remove all matches from the list and treat a new call to search
+     * any ongoing queries, remove all results from the list and treat a new call to search
      * as a completely separate search.
      */
     public virtual void clear () {}

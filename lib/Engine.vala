@@ -11,12 +11,12 @@ public class Detective.Engine : Object {
     private const int DEFAULT_RESULT_NUMBER = 10;
 
     /**
-     * A model containing all matches from all search providers matching the current query.
-     * The matches are grouped in sections by their category where the first section
+     * A model containing all results from all search providers matching the current query.
+     * The results are grouped in sections by their category where the first section
      * is the section with the result that has the highest relevancy. Within a section
-     * the matches are also sorted by relevancy descending.
+     * the results are also sorted by relevancy descending.
      */
-    public Gtk.SectionModel matches { get { return aggregator.results; } }
+    public Gtk.SectionModel results { get { return aggregator.results; } }
 
     private ResultAggregator aggregator;
 

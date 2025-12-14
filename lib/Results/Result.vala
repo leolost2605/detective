@@ -12,8 +12,8 @@ namespace Detective.Relevancy {
 }
 
 public class Detective.Result : Object {
-    // Will be automatically set by the MatchType this result is added to
-    public string match_type_name { get; internal set; }
+    // Will be automatically set by the ResultType this result is added to
+    public string result_type_name { get; internal set; }
 
     public int relevancy { get; construct set; default = 0; }
     public string title { get; construct set; default = _("Unknown Result"); }
