@@ -1,4 +1,4 @@
-public class Detective.AppMatch : Match {
+public class Detective.AppMatch : Result {
     public string app_id { get; construct; }
     public string exec { get; construct; }
     public string[] keywords { get; construct; }
@@ -67,7 +67,7 @@ public class Detective.AppMatch : Match {
     }
 }
 
-public class Detective.AppActionMatch : Match {
+public class Detective.AppActionMatch : Result {
     public string app_id { get; construct; }
     public string action_name { get; construct; }
     public string exec { get; construct; }
@@ -100,10 +100,10 @@ public class Detective.AppActionMatch : Match {
 
         int relevancy = 0;
 
-        // Match against action title
+        // Result against action title
         relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, title_tokens, title_weight);
 
-        // Match against app title
+        // Result against app title
         relevancy += Algorithms.fuzzy_relevancy (query.search_tokens, app_title_tokens, app_title_weight);
 
         relevancy = int.min (relevancy, Relevancy.HIGHEST);
@@ -421,13 +421,13 @@ public class Detective.AppsProvider : SearchProvider {
 
     public override void register_with_aggregator (ResultAggregator aggregator) {
         var filter_list_model = new Gtk.FilterListModel (list_store, new Gtk.CustomFilter ((obj) => {
-            var match = (AppMatch) obj;
-            return query != null ? match.set_relevancy (query) > 0 : false;
+            var result = (AppMatch) obj;
+            return query != null ? result.set_relevancy (query) > 0 : false;
         }));
 
         var actions_filter_list_model = new Gtk.FilterListModel (actions_list_store, new Gtk.CustomFilter ((obj) => {
-            var match = (AppActionMatch) obj;
-            return query != null ? match.set_relevancy (query) > 0 : false;
+            var result = (AppActionMatch) obj;
+            return query != null ? result.set_relevancy (query) > 0 : false;
         }));
 
         aggregator.register_result_type (_("Applications"), Utils.create_sort_and_slice_model (filter_list_model));

@@ -27,20 +27,20 @@ public class Detective.Preview : Granite.Bin {
     }
 
     private void on_selected_item_changed () {
-        var match = (Match) selection.selected_item;
+        var result = (Result) selection.selected_item;
 
-        if (match == null) {
+        if (result == null) {
             scrolled_window.child = null;
             return;
         }
 
-        var custom_preview = match.get_custom_preview ();
+        var custom_preview = result.get_custom_preview ();
         if (custom_preview != null) {
             scrolled_window.child = custom_preview;
             return;
         }
 
-        generic_preview.bind (match);
+        generic_preview.bind (result);
         scrolled_window.child = generic_preview;
     }
 }

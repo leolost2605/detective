@@ -5,7 +5,7 @@
 
 namespace Detective.Utils {
     public static ListModel create_sort_and_slice_model (ListModel results) {
-        var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Match), null, "relevancy")) {
+        var relevancy_sorter = new Gtk.NumericSorter (new Gtk.PropertyExpression (typeof (Result), null, "relevancy")) {
             sort_order = DESCENDING
         };
 

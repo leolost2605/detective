@@ -9,9 +9,9 @@ public class Detective.InternalProvider : SearchProvider {
     private Gtk.StringFilter filter;
 
     public override void register_with_aggregator (ResultAggregator aggregator) {
-        results = new ListStore (typeof (Match));
+        results = new ListStore (typeof (Result));
 
-        filter = new Gtk.StringFilter (new Gtk.PropertyExpression (typeof (Match), null, "title")) {
+        filter = new Gtk.StringFilter (new Gtk.PropertyExpression (typeof (Result), null, "title")) {
             match_mode = SUBSTRING,
             ignore_case = true
         };

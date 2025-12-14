@@ -13,7 +13,7 @@ public class Detective.Engine : Object {
     /**
      * A model containing all matches from all search providers matching the current query.
      * The matches are grouped in sections by their category where the first section
-     * is the section with the match that has the highest relevancy. Within a section
+     * is the section with the result that has the highest relevancy. Within a section
      * the matches are also sorted by relevancy descending.
      */
     public Gtk.SectionModel matches { get { return aggregator.results; } }

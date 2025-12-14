@@ -109,7 +109,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
     private void on_row_bind (Object obj) {
         var list_item = (Gtk.ListItem) obj;
-        var item = (Match) list_item.item;
+        var item = (Result) list_item.item;
         ((MatchRow) list_item.child).bind (item);
     }
 
@@ -120,7 +120,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
 
     private void on_header_bind (Object obj) {
         var list_header = (Gtk.ListHeader) obj;
-        var item = (Match) list_header.item;
+        var item = (Result) list_header.item;
         ((Granite.HeaderLabel) list_header.child).label = item.match_type_name;
     }
 
@@ -141,14 +141,14 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
     }
 
     private async void activate_match (uint position) {
-        var match = (Match) engine.matches.get_item (position);
+        var result = (Result) engine.matches.get_item (position);
 
-        if (match == null) {
+        if (result == null) {
             return;
         }
 
         try {
-            yield match.activate ();
+            yield result.activate ();
         } catch (Error e) {
             warning (e.message);
         }

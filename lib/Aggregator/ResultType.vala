@@ -32,12 +32,12 @@ internal class Detective.ResultType : Object {
 
     private void on_items_changed (uint position, uint removed, uint added) {
         for (uint i = position; i < position + added; i++) {
-            var match = (Match) results.get_item (i);
-            match.match_type_name = name;
+            var result = (Result) results.get_item (i);
+            result.match_type_name = name;
         }
 
         if (position == 0) {
-            best_result_relevancy = results.get_n_items () > 0 ? ((Match) results.get_item (0)).relevancy : 0;
+            best_result_relevancy = results.get_n_items () > 0 ? ((Result) results.get_item (0)).relevancy : 0;
         }
     }
 }

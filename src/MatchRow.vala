@@ -27,8 +27,8 @@ public class Detective.MatchRow : Granite.Bin {
         child = content;
     }
 
-    public void bind (Match match) {
-        icon.gicon = match.icon;
-        label.label = match.title;
+    public void bind (Result result) {
+        icon.gicon = result.icon;
+        label.label = result.title;
     }
 }

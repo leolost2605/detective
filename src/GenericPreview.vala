@@ -27,9 +27,9 @@ public class Detective.GenericPreview : Granite.Bin {
         child = content;
     }
 
-    public void bind (Match match) {
-        icon.gicon = match.icon;
-        label.label = match.title;
-        label.secondary_text = match.description;
+    public void bind (Result result) {
+        icon.gicon = result.icon;
+        label.label = result.title;
+        label.secondary_text = result.description;
     }
 }

@@ -24,7 +24,7 @@ public class Detective.CalculatorProvider : SearchProvider {
     private ListStore matches_internal;
 
     construct {
-        matches_internal = new ListStore (typeof (Match));
+        matches_internal = new ListStore (typeof (Result));
     }
 
     public override void register_with_aggregator (ResultAggregator aggregator) {
@@ -39,12 +39,12 @@ public class Detective.CalculatorProvider : SearchProvider {
         matches_internal.remove_all ();
 
         try {
-            var result = yield get_solution (query.search_term,  query.cancellable);
+            var solution = yield get_solution (query.search_term,  query.cancellable);
 
             var icon = new ThemedIcon ("accessories-calculator");
-            var match = new Match (Relevancy.HIGH, result, null, icon, null);
+            var result = new Result (Relevancy.HIGH, solution, null, icon, null);
 
-            matches_internal.append (match);
+            matches_internal.append (result);
         } catch (Error e) {
             if (!(e is IOError.FAILED_HANDLED) && !(e is IOError.CANCELLED)) {
                 warning ("Error processing %s with math parse: %s", query.search_term, e.message);

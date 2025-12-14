@@ -1,4 +1,4 @@
-public class Detective.FileMatch : Match {
+public class Detective.FileMatch : Result {
     public string uri { get; construct; }
 
     public FileMatch (int relevancy, string title, string? description, Icon? icon, string uri) {
