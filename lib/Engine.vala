@@ -46,6 +46,8 @@ public class Detective.Engine : Object {
         if (current_query != null) {
             current_query.cancel ();
         }
+
+        aggregator.clear_temporary_result_types ();
     }
 
     public void search (string search_term) {
