@@ -42,7 +42,7 @@ public class Detective.CalculatorProvider : SearchProvider {
             var result = yield get_solution (query.search_term,  query.cancellable);
 
             var icon = new ThemedIcon ("accessories-calculator");
-            var match = new Match ( 0, result, null, icon, null);
+            var match = new Match (Relevancy.HIGH, result, null, icon, null);
 
             matches_internal.append (match);
         } catch (Error e) {
