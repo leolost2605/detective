@@ -42,7 +42,7 @@ public class Detective.TrackerProvider : SearchProvider {
         aggregator.register_result_type (match_type_name, matches);
     }
 
-    internal override void search (Query search_query) {
+    internal override void search (Query search_query, ResultAggregator aggregator) {
         this.search_query = search_query;
         search_tracker.begin ();
     }

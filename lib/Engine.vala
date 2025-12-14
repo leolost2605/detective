@@ -56,7 +56,7 @@ public class Detective.Engine : Object {
         current_query = new Query (search_term, DEFAULT_RESULT_NUMBER);
 
         for (int i = 0; i < search_providers.get_n_items (); i++) {
-            ((SearchProvider) search_providers.get_item (i)).search (current_query);
+            ((SearchProvider) search_providers.get_item (i)).search (current_query, aggregator);
         }
     }
 
