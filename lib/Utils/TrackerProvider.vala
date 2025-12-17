@@ -15,6 +15,8 @@ public class Detective.TrackerProvider : SearchProvider {
 
     private unowned CreateResultFunc create_result_func;
 
+    private uint result_type_id;
+
     public TrackerProvider (string query, string result_type_name, CreateResultFunc create_result_func) {
         Object (query: query, result_type_name: result_type_name);
 
@@ -30,6 +32,10 @@ public class Detective.TrackerProvider : SearchProvider {
         }
     }
 
+    public override void register_with_aggregator (ResultAggregator aggregator) {
+        result_type_id = aggregator.register_result_type_simple (result_type_name);
+    }
+
     internal override void search (Query search_query, ResultAggregator aggregator) {
         search_tracker.begin (search_query, aggregator);
     }
@@ -42,19 +48,13 @@ public class Detective.TrackerProvider : SearchProvider {
 
             var cursor = yield tracker_statement_id.execute_async (search_query.cancellable);
 
-            ListStore? results = null;
             while (yield cursor.next_async ()) {
                 if (search_query.cancelled) {
                     throw new IOError.CANCELLED ("Search was cancelled");
                 }
 
-                if (results == null) {
-                    results = new ListStore (typeof (Result));
-                    aggregator.register_result_type (result_type_name, results, false);
-                }
-
                 var result = create_result_func (cursor);
-                results.append (result);
+                aggregator.add_result (result_type_id, result);
             }
 
             cursor.close ();
@@ -65,5 +65,7 @@ public class Detective.TrackerProvider : SearchProvider {
                 warning (e.message);
             }
         }
+
+        aggregator.commit_results (result_type_id);
     }
 }

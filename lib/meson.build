@@ -8,6 +8,7 @@ sources = [
     'Search' / 'Query.vala',
     'Search' / 'SearchProvider.vala',
     'Utils' / 'Algorithms.vala',
+    'Utils' / 'ResultListStore.vala',
     'Utils' / 'TrackerProvider.vala',
     'Utils' / 'Utils.vala',
 ]

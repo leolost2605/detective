@@ -17,6 +17,8 @@ public class Detective.ResultAggregator : Object {
 
     private Gtk.NumericSorter result_type_sorter;
 
+    private GenericArray<ResultListStore> result_stores;
+
     construct {
         result_types = new ListStore (typeof (ResultType));
 
@@ -32,6 +34,8 @@ public class Detective.ResultAggregator : Object {
         });
 
         results = new Gtk.FlattenListModel (results_model);
+
+        result_stores = new GenericArray<ResultListStore> ();
     }
 
     public void register_result_type (string name, ListModel results, bool permanent = true) {
@@ -44,5 +48,46 @@ public class Detective.ResultAggregator : Object {
 
     internal void clear_temporary_result_types () {
         result_types.splice (permanent_result_types_index, result_types.n_items - permanent_result_types_index, {});
+    }
+
+    /**
+     * Registers a new result type with the given name.
+     * The returned id can then be used to use the convenience API
+     * {@link add_result} and {@link commit_results}.
+     * The result type will also be automatically cleared when a search is ended.
+     */
+    public uint register_result_type_simple (string name) {
+        var store = new ResultListStore ();
+        result_stores.add (store);
+
+        register_result_type (name, store);
+
+        return result_stores.length - 1;
+    }
+
+    /**
+     * Adds a result to the result type with the given id. The result will not be
+     * immediately visible but only after {@link commit_results} has been called.
+     *
+     * @param result_type_id An id obtained from {@link register_result_type_simple}
+     */
+    public void add_result (uint result_type_id, Result result) {
+        result_stores[result_type_id].append (result);
+    }
+
+    /**
+     * Replaces the currently visible results of the result type with the given id
+     * with the results added using {@link add_result} since the last commit.
+     *
+     * @param result_type_id An id obtained from {@link register_result_type_simple}
+     */
+    public void commit_results (uint result_type_id) {
+        result_stores[result_type_id].commit ();
+    }
+
+    internal void clear () {
+        foreach (var store in result_stores) {
+            store.commit ();
+        }
     }
 }

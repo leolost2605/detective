@@ -65,6 +65,8 @@ public class Detective.Engine : Object {
 
         current_query = null;
 
+        aggregator.clear ();
+
         for (int i = 0; i < search_providers.get_n_items (); i++) {
             ((SearchProvider) search_providers.get_item (i)).clear ();
         }
