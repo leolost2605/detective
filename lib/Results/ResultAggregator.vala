@@ -13,7 +13,6 @@ public class Detective.ResultAggregator : Object {
     public Gtk.SectionModel results { get; construct; }
 
     private ListStore result_types;
-    private uint permanent_result_types_index = 0;
 
     private Gtk.NumericSorter result_type_sorter;
 
@@ -38,16 +37,11 @@ public class Detective.ResultAggregator : Object {
         result_stores = new GenericArray<ResultListStore> ();
     }
 
-    public void register_result_type (string name, ListModel results, bool permanent = true) {
+    public void register_result_type (string name, ListModel results) {
         var result_type = new ResultType (name, results);
         result_type.notify["best-result-relevancy"].connect (() => result_type_sorter.changed (DIFFERENT));
 
-        var pos = permanent ? permanent_result_types_index++ : result_types.n_items;
-        result_types.insert (pos, result_type);
-    }
-
-    internal void clear_temporary_result_types () {
-        result_types.splice (permanent_result_types_index, result_types.n_items - permanent_result_types_index, {});
+        result_types.append (result_type);
     }
 
     /**
