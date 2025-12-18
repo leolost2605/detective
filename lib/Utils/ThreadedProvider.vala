@@ -22,6 +22,11 @@ public abstract class Detective.ThreadedProvider : SearchProvider {
 
         while (true) {
             var job = query_queue.pop ();
+
+            if (job.query.cancelled) {
+                continue;
+            }
+
             search_threaded (job.query, job.aggregator);
         }
     }
