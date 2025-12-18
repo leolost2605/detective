@@ -20,55 +20,43 @@
 * Authored by: Michal Hruby <michal.mhr@gmail.com>
 */
 
-public class Detective.CalculatorProvider : SearchProvider {
-    private ListStore matches_internal;
-
-    construct {
-        matches_internal = new ListStore (typeof (Result));
-    }
+public class Detective.CalculatorProvider : ThreadedProvider {
+    private uint result_type_id;
 
     public override void register_with_aggregator (ResultAggregator aggregator) {
-        aggregator.register_result_type (_("Calculation"), matches_internal);
+        result_type_id = aggregator.register_result_type_simple (_("Calculation"));
     }
 
-    public override void search (Query query, ResultAggregator aggregator) {
-        search_internal.begin (query);
-    }
-
-    private async void search_internal (Query query) {
-        matches_internal.remove_all ();
-
+    protected override void search_threaded (Query query, ResultAggregator aggregator) {
         try {
-            var solution = yield get_solution (query.search_term,  query.cancellable);
+            var solution = get_solution (query.search_term,  query.cancellable);
 
             var icon = new ThemedIcon ("accessories-calculator");
             var result = new Result (Relevancy.HIGH, solution, null, icon, null);
 
-            matches_internal.append (result);
+            aggregator.add_result (result_type_id, result);
         } catch (Error e) {
             if (!(e is IOError.FAILED_HANDLED) && !(e is IOError.CANCELLED)) {
                 warning ("Error processing %s with math parse: %s", query.search_term, e.message);
             }
         }
+
+        aggregator.commit_results_threadsafe (result_type_id);
     }
 
-    private async string get_solution (string query_string, Cancellable cancellable) throws Error {
+    private string get_solution (string query_string, Cancellable cancellable) throws Error {
         string[] argv = { "run_mathparse.py", query_string };
 
         var subprocess = new Subprocess.newv (argv, STDOUT_PIPE | STDERR_SILENCE);
 
         string result;
-        yield subprocess.communicate_utf8_async (null, cancellable, out result, null);
+        subprocess.communicate_utf8 (null, cancellable, out result, null);
 
         if (subprocess.get_exit_status () != 0) {
             throw new IOError.FAILED_HANDLED ("No valid solution found");
         }
 
         return result.strip ();
-    }
-
-    public override void clear () {
-        matches_internal.remove_all ();
     }
 }
 
