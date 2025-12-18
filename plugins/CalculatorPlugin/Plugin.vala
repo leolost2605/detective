@@ -34,7 +34,7 @@ public class Detective.CalculatorProvider : ThreadedProvider {
             var icon = new ThemedIcon ("accessories-calculator");
             var result = new Result (Relevancy.HIGH, solution, null, icon, null);
 
-            aggregator.add_result (result_type_id, result);
+            aggregator.add_result_threadsafe (result_type_id, result);
         } catch (Error e) {
             if (!(e is IOError.FAILED_HANDLED) && !(e is IOError.CANCELLED)) {
                 warning ("Error processing %s with math parse: %s", query.search_term, e.message);
