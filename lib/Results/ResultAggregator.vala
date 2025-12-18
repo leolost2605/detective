@@ -79,6 +79,16 @@ public class Detective.ResultAggregator : Object {
         result_stores[result_type_id].commit ();
     }
 
+    /**
+     * Thread safe version of {@link commit_results}.
+     */
+    public void commit_results_threadsafe (uint result_type_id) {
+        Idle.add (() => {
+            commit_results (result_type_id);
+            return Source.REMOVE;
+        }, Priority.HIGH);
+    }
+
     internal void clear () {
         foreach (var store in result_stores) {
             store.commit ();
