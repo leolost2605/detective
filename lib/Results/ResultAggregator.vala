@@ -80,6 +80,16 @@ public class Detective.ResultAggregator : Object {
     }
 
     /**
+     * Thread safe version of {@link add_result}.
+     */
+    public void add_result_threadsafe (uint result_type_id, Result result) {
+        Idle.add (() => {
+            add_result (result_type_id, result);
+            return Source.REMOVE;
+        }, Priority.HIGH);
+    }
+
+    /**
      * Thread safe version of {@link commit_results}.
      */
     public void commit_results_threadsafe (uint result_type_id) {
