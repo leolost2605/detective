@@ -1,3 +1,22 @@
+public class Detective.FileActionMatch : Result {
+    public delegate void ActionCallback ();
+    private ActionCallback callback;
+
+    public FileActionMatch (string title, string? description, Icon? icon, owned ActionCallback callback) {
+        Object (
+            relevancy: 0,
+            title: title,
+            description: description,
+            icon: icon
+        );
+        this.callback = (owned) callback;
+    }
+
+    public override async void activate () throws Error {
+        this.callback ();
+    }
+}
+
 public class Detective.FileMatch : Result {
     public string uri { get; construct; }
 
@@ -13,6 +32,58 @@ public class Detective.FileMatch : Result {
 
     public override async void activate () throws Error {
         yield new Gtk.FileLauncher (File.new_for_uri (uri)).launch (null, null);
+    }
+
+    public override GLib.ListModel? get_actions () {
+        var actions = new GLib.ListStore (typeof (Result));
+        
+        // Open Location
+        actions.append (new Detective.FileActionMatch (
+            _("Open Location"),
+            _("Open the folder containing this file"),
+            new ThemedIcon ("folder-symbolic"),
+            () => {
+                var file = File.new_for_uri (uri);
+                var parent = file.get_parent ();
+                if (parent != null) {
+                    new Gtk.FileLauncher (parent).launch.begin (null, null);
+                }
+            }
+        ));
+
+        // Copy Path
+        actions.append (new Detective.FileActionMatch (
+            _("Copy Path"),
+            _("Copy the absolute file path to clipboard"),
+            new ThemedIcon ("edit-copy-symbolic"),
+            () => {
+                var display = Gdk.Display.get_default ();
+                if (display != null) {
+                    string path = uri;
+                    try {
+                        path = Filename.from_uri (uri, null);
+                    } catch (Error e) {}
+                    display.get_clipboard ().set_text (path);
+                }
+            }
+        ));
+
+        // Move to Trash
+        actions.append (new Detective.FileActionMatch (
+            _("Move to Trash"),
+            _("Move this file to the trash bin"),
+            new ThemedIcon ("user-trash-symbolic"),
+            () => {
+                try {
+                    var file = File.new_for_uri (uri);
+                    file.trash (null);
+                } catch (Error e) {
+                    warning ("Failed to trash file: %s", e.message);
+                }
+            }
+        ));
+
+        return actions;
     }
 }
 

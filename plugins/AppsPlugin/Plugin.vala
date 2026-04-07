@@ -2,6 +2,7 @@ public class Detective.AppMatch : Result {
     public string app_id { get; construct; }
     public string exec { get; construct; }
     public string[] keywords { get; construct; }
+    public ListStore actions_store { get; private set; }
 
     private string[] title_tokens;
     private string[] description_tokens;
@@ -21,6 +22,11 @@ public class Detective.AppMatch : Result {
     construct {
         title_tokens = title.tokenize_and_fold (null, null);
         description_tokens = description?.tokenize_and_fold (null, null) ?? new string[0];
+        actions_store = new ListStore (typeof (AppActionMatch));
+    }
+
+    public override GLib.ListModel? get_actions () {
+        return actions_store;
     }
 
     public int set_relevancy (Query query) {
@@ -63,6 +69,32 @@ public class Detective.AppMatch : Result {
             app_info.launch (null, null);
         } else {
             Process.spawn_command_line_async ("flatpak-spawn --host " + exec);
+        }
+    }
+}
+
+public class Detective.CustomActionMatch : Result {
+    public string command { get; construct; }
+    public int action_type { get; construct; } // 0: exec, 1: clipboard, 2: pkexec
+
+    public CustomActionMatch (string title, string? description, Icon? icon, string command, int action_type) {
+        Object (
+            relevancy: 0,
+            title: title,
+            description: description,
+            icon: icon,
+            command: command,
+            action_type: action_type
+        );
+    }
+
+    public override async void activate () throws Error {
+        if (action_type == 1) { // Clipboard
+            Gdk.Display.get_default ().get_clipboard ().set_text (command);
+        } else if (action_type == 2) { // pkexec
+            Process.spawn_command_line_async ("pkexec " + command);
+        } else {
+            Process.spawn_command_line_async (command);
         }
     }
 }
@@ -180,10 +212,9 @@ public class Detective.AppsProvider : SearchProvider {
         // Make sure preferred entries come first here
         paths += Environment.get_user_data_dir ();
         foreach (var dir in Environment.get_system_data_dirs ()) {
+            paths += dir; // Fix to load native apps properly
             if (dir.has_prefix ("/usr")) {
                 paths += "/run/host" + dir; // /usr dirs aren't available from the sandbox
-            } else {
-                paths += dir;
             }
         }
 
@@ -370,7 +401,8 @@ public class Detective.AppsProvider : SearchProvider {
             debug ("Failed to get keywords: %s", e.message);
         }
 
-        list_store.append (new AppMatch (app_id, title, description, icon, exec, keywords));
+        var app_match = new AppMatch (app_id, title, description, icon, exec, keywords);
+        list_store.append (app_match);
         found_desktop_ids.add (app_id);
 
         try {
@@ -409,13 +441,20 @@ public class Detective.AppsProvider : SearchProvider {
                         continue;
                     }
 
-                    actions_list_store.append (
-                        new AppActionMatch (app_id, action_id, action_name, title, icon, action_exec)
-                    );
+                    var action_match = new AppActionMatch (app_id, action_id, action_name, title, icon, action_exec);
+                    actions_list_store.append (action_match);
+                    app_match.actions_store.append (action_match);
                 }
             }
         } catch (Error e) {
             debug ("Failed to parse actions for %s: %s", app_id, e.message);
+        }
+
+        // Acciones profesionales generadas por defecto para cada app (Nivel 2026)
+        if (exec != null && exec != "") {
+            app_match.actions_store.append (new CustomActionMatch (_("Ejecutar como Administrador"), _("Abre la aplicación con privilegios elevados"), new ThemedIcon ("security-high-symbolic"), exec, 2));
+            app_match.actions_store.append (new CustomActionMatch (_("Copiar comando"), _("Copia la ruta del ejecutable al portapapeles"), new ThemedIcon ("edit-copy-symbolic"), exec, 1));
+            app_match.actions_store.append (new CustomActionMatch (_("Ver Detalles"), _("Mostrar identificador de la app"), new ThemedIcon ("dialog-information-symbolic"), app_id, 1));
         }
     }
 

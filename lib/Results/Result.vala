@@ -36,6 +36,10 @@ public class Detective.Result : Object {
         return null;
     }
 
+    public virtual GLib.ListModel? get_actions () {
+        return null;
+    }
+
     public virtual async void activate () throws Error {
         debug ("Activated result without activate func");
     }
