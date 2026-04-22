@@ -29,7 +29,6 @@ public class Detective.Engine : Object {
         aggregator = new ResultAggregator ();
 
         search_providers = new ListStore (typeof (SearchProvider));
-        search_providers.append (new InternalProvider ());
 
         plugin_loader = new PluginLoader ();
 
