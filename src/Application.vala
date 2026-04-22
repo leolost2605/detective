@@ -13,7 +13,7 @@ public class Detective.Application : Gtk.Application {
     };
 
     private Engine engine;
-    private SearchWindow? window;
+    private Window? window;
 
     public Application () {
         Object (
@@ -63,7 +63,7 @@ public class Detective.Application : Gtk.Application {
 
     public void present_window () {
         if (window == null) {
-            window = new SearchWindow (this, engine);
+            window = new Window (this, engine);
         }
 
         window.present ();
