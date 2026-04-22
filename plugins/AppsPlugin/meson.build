@@ -13,7 +13,7 @@ shared_library(
     'AppsPlugin',
     sources: sources,
     dependencies: [
-        lib_dep,
+        detective_dep,
         meson.get_compiler('c').find_library ('m')
     ],
     install: true,

@@ -11,7 +11,7 @@ internal class Detective.PluginLoader : Object {
     internal PluginLoader () {}
 
     construct {
-        var base_folder = File.new_for_path (Build.PLUGIN_DIR);
+        var base_folder = File.new_for_path (Config.PLUGIN_DIR);
         find_plugins (base_folder);
     }
 
