@@ -1,4 +1,4 @@
-sources = [
+lib_sources = [
     'Engine.vala',
     'PluginLoader.vala',
     'Results' / 'Result.vala',
@@ -13,45 +13,29 @@ sources = [
     'Utils' / 'Utils.vala',
 ]
 
-libdetective_deps = [
-    dependency('gtk4'),
-    dependency('tracker-sparql-3.0'),
-    dependency('gio-unix-2.0'),
-    dependency('gmodule-2.0'),
-]
-
-plugin_dir = join_paths(get_option('prefix'), get_option('libdir'), 'detective')
-
-config_vapi = meson.get_compiler('vala').find_library('config', dirs: meson.current_source_dir())
-
 config_data = configuration_data()
-config_data.set_quoted('PLUGIN_DIR', plugin_dir)
-config_data.set_quoted('GETTEXT_PACKAGE', meson.project_name())
-config_data.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
+config_data.set('GETTEXT_PACKAGE', meson.project_name())
+config_data.set('LOCALEDIR', locale_dir)
+config_data.set('PLUGIN_DIR', plugin_dir)
 
 config_header = configure_file(
+    input: 'Config.vala.in',
+    output: 'Config.vala',
     configuration: config_data,
-    output: 'config.h'
 )
 
-libdetective = library(
+detective_lib = library(
     meson.project_name(),
-    sources,
+    lib_sources,
     config_header,
-    dependencies: [
-        libdetective_deps,
-        config_vapi,
-    ],
+    dependencies: lib_deps,
     vala_header: 'detective.h',
     install: true,
 )
 
-lib_dep = declare_dependency(
-    link_with: libdetective,
-    dependencies: [
-        libdetective_deps,
-        config_vapi,
-    ],
+detective_dep = declare_dependency(
+    link_with: detective_lib,
+    dependencies: lib_deps,
     include_directories: [include_directories('.')],
 )
 
