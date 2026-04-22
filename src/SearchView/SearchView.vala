@@ -164,6 +164,6 @@ public class Detective.SearchView : Granite.Bin {
     }
 
     private void close () {
-        activate_action_variant ("win.close", null);
+        activate_action_variant ("window.close", null);
     }
 }
