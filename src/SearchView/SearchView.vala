@@ -3,19 +3,18 @@
  * SPDX-FileCopyrightText: 2025 Leonhard Kargl <leo.kargl@proton.me>
  */
 
-public class Detective.SearchWindow : Gtk.ApplicationWindow {
-    public const int MAX_HEIGHT = 300;
+public class Detective.SearchView : Granite.Bin {
+    private const int MAX_HEIGHT = 300;
 
     public Engine engine { get; construct; }
 
-    //Used in signal handlers so make them fields to avoid memory leaks
     private Gtk.SearchEntry entry;
     private Gtk.SingleSelection selection_model;
     private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
 
-    public SearchWindow (Application app, Engine engine) {
-        Object (application: app, engine: engine);
+    public SearchView (Engine engine) {
+        Object (engine: engine);
     }
 
     construct {
@@ -50,7 +49,6 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
             propagate_natural_height = true,
-            max_content_height = MAX_HEIGHT,
         };
 
         var preview = new Preview (selection_model);
@@ -67,20 +65,21 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
             }
         );
 
+        var clamp = new Adw.Clamp () {
+            child = paned,
+            orientation = VERTICAL,
+            maximum_size = MAX_HEIGHT,
+        };
+
         var toolbar_view = new Adw.ToolbarView () {
-            content = paned
+            content = clamp
         };
         toolbar_view.add_top_bar (entry);
 
-        resizable = false;
         child = toolbar_view;
-        titlebar = new Gtk.Grid () { visible = false };
-        default_width = 700;
-        hide_on_close = true;
 
-        notify["is-active"].connect (on_is_active_changed);
-        close_request.connect (on_close_request);
         map.connect (() => entry.grab_focus ());
+        unmap.connect (on_unmap);
 
         entry.search_changed.connect (() => {
             if (entry.text.strip () != "") {
@@ -124,16 +123,9 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         ((Granite.HeaderLabel) list_header.child).label = item.result_type_name;
     }
 
-    private void on_is_active_changed () {
-        if (!is_active) {
-            close ();
-        }
-    }
-
-    private bool on_close_request () {
+    private void on_unmap () {
         engine.clear_search ();
         entry.text = "";
-        return false;
     }
 
     private void on_entry_activated () {
@@ -152,6 +144,7 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         } catch (Error e) {
             warning (e.message);
         }
+
         close ();
     }
 
@@ -168,5 +161,9 @@ public class Detective.SearchWindow : Gtk.ApplicationWindow {
         if (selection_model.get_n_items () > 0) {
             list_view.scroll_to (0, SELECT, null);
         }
+    }
+
+    private void close () {
+        activate_action_variant ("win.close", null);
     }
 }

@@ -13,28 +13,7 @@ if get_option('desktopintegration')
 endif
 
 subdir('lib')
+subdir('src')
 subdir('plugins')
-
-# Create a new executable, list the files we want to compile, list the dependencies we need, and install
-executable(
-    meson.project_name(),
-    'src' / 'Application.vala',
-    'src' / 'GenericPreview.vala',
-    'src' / 'Preview.vala',
-    'src' / 'ResultRow.vala',
-    'src' / 'SearchWindow.vala',
-    'src' / 'ShellKeyGrabber.vala',
-    dependencies: [
-        dependency('gtk4'),
-        dependency('granite-7'),
-        dependency('libadwaita-1'),
-        dependency('libportal'),
-        dependency('libportal-gtk4'),
-        dependency('tracker-sparql-3.0'),
-        lib_dep
-    ],
-    install: true
-)
-
 subdir('data')
 subdir('po')
