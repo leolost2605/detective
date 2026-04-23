@@ -15,7 +15,7 @@ public class Detective.GenericPreview : Granite.Bin {
 
         label = new Granite.HeaderLabel ("");
 
-        var content = new Gtk.Box (VERTICAL, 6) {
+        var content = new Granite.Box (VERTICAL, HALF) {
             margin_top = 12,
             margin_start = 12,
             margin_end = 12,

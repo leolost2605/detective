@@ -15,7 +15,7 @@ public class Detective.ResultRow : Granite.Bin {
             xalign = 0
         };
 
-        var content = new Gtk.Box (HORIZONTAL, 6) {
+        var content = new Granite.Box (HORIZONTAL, HALF) {
             margin_top = 6,
             margin_bottom = 6,
             margin_start = 6,
