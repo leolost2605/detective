@@ -49,27 +49,30 @@ public class Detective.SearchView : Granite.Bin {
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
             propagate_natural_height = true,
+            propagate_natural_width = true,
+            hscrollbar_policy = NEVER,
         };
 
         var preview = new Preview (selection_model);
 
-        var paned = new Gtk.Paned (HORIZONTAL) {
-            start_child = scrolled_window,
-            end_child = preview,
+        var box = new Granite.Box (HORIZONTAL, DOUBLE) {
+            homogeneous = true,
+        };
+        box.append (scrolled_window);
+        box.append (preview);
+
+        var clamp = new Adw.Clamp () {
+            child = box,
+            orientation = VERTICAL,
+            maximum_size = MAX_HEIGHT,
         };
         selection_model.bind_property (
-            "n-items", paned, "visible", SYNC_CREATE,
+            "n-items", clamp, "visible", SYNC_CREATE,
             (binding, from_value, ref to_value) => {
                 to_value.set_boolean (from_value.get_uint () > 0);
                 return true;
             }
         );
-
-        var clamp = new Adw.Clamp () {
-            child = paned,
-            orientation = VERTICAL,
-            maximum_size = MAX_HEIGHT,
-        };
 
         var toolbar_view = new Adw.ToolbarView () {
             content = clamp

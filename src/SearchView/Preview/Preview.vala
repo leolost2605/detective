@@ -16,6 +16,7 @@ public class Detective.Preview : Granite.Bin {
     construct {
         scrolled_window = new Gtk.ScrolledWindow () {
             propagate_natural_height = true,
+            propagate_natural_width = true,
         };
 
         child = scrolled_window;
