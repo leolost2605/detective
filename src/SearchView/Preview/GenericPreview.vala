@@ -17,7 +17,7 @@ public class Detective.GenericPreview : Granite.Bin {
 
         var content = new Granite.Box (VERTICAL, HALF) {
             margin_top = 12,
-            margin_start = 12,
+            margin_start = 6,
             margin_end = 12,
             margin_bottom = 12
         };
