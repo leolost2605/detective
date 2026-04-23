@@ -4,8 +4,9 @@ project(
     version: '0.1.0'
 )
 
-pkgconfig = import('pkgconfig')
+gnome = import('gnome')
 i18n = import('i18n')
+pkgconfig = import('pkgconfig')
 
 locale_dir = get_option('prefix') / get_option('localedir')
 plugin_dir = get_option('prefix') / get_option('libdir') / 'detective'
@@ -45,8 +46,8 @@ app_deps = [
     tracker_dep,
 ]
 
+subdir('data')
 subdir('src')
 
 subdir('plugins')
-subdir('data')
 subdir('po')
