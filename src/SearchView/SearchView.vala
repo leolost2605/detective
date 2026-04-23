@@ -117,14 +117,19 @@ public class Detective.SearchView : Granite.Bin {
     }
 
     private void on_header_setup (Object obj) {
+        var label = new Gtk.Label (null) {
+            halign = START
+        };
+        label.add_css_class ("result-heading");
+
         var list_header = (Gtk.ListHeader) obj;
-        list_header.child = new Granite.HeaderLabel ("");
+        list_header.child = label;
     }
 
     private void on_header_bind (Object obj) {
         var list_header = (Gtk.ListHeader) obj;
         var item = (Result) list_header.item;
-        ((Granite.HeaderLabel) list_header.child).label = item.result_type_name;
+        ((Gtk.Label) list_header.child).label = item.result_type_name;
     }
 
     private void on_unmap () {
