@@ -16,10 +16,10 @@ public class Detective.ResultRow : Granite.Bin {
         };
 
         var content = new Gtk.Box (HORIZONTAL, 6) {
-            margin_start = 12,
-            margin_end = 12,
             margin_top = 6,
-            margin_bottom = 6
+            margin_bottom = 6,
+            margin_start = 6,
+            margin_end = 6,
         };
         content.append (icon);
         content.append (label);

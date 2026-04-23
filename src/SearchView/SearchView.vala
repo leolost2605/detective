@@ -44,6 +44,7 @@ public class Detective.SearchView : Granite.Bin {
             single_click_activate = true,
             header_factory = header_factory
         };
+        list_view.add_css_class ("results-list");
         list_view.add_css_class (Granite.STYLE_CLASS_BACKGROUND);
 
         scrolled_window = new Gtk.ScrolledWindow () {
