@@ -1,3 +1,5 @@
+lib_name = 'detective'
+
 lib_sources = [
     'Engine.vala',
     'PluginLoader.vala',
@@ -25,12 +27,20 @@ config_header = configure_file(
 )
 
 detective_lib = library(
-    meson.project_name(),
+    lib_name,
     lib_sources,
     config_header,
     dependencies: lib_deps,
-    vala_header: 'detective.h',
+    vala_header: lib_name + '.h',
+    vala_vapi: lib_name + '.vapi',
+    version: meson.project_version(),
     install: true,
+    install_dir: [true, true, true],
+)
+
+install_data(
+    lib_name + '.deps',
+    install_dir: get_option('datadir') / 'vala' / 'vapi'
 )
 
 detective_dep = declare_dependency(
@@ -39,11 +49,11 @@ detective_dep = declare_dependency(
     include_directories: [include_directories('.')],
 )
 
-# pkgconfig.generate(
-#     libdetective,
-#     name: meson.project_name(),
-#     requires: libdetective_deps,
-#     description: 'Easy to use search engine framework.',
-#     version: meson.project_version(),
-#     url: 'https://github.com/leolost2605/detective',
-# )
+pkgconfig.generate(
+    detective_lib,
+    name: lib_name,
+    requires: lib_deps,
+    description: 'Easy to use search engine framework.',
+    version: meson.project_version(),
+    url: 'https://github.com/leolost2605/detective',
+)

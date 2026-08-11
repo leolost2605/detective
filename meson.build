@@ -1,4 +1,8 @@
-project('io.github.leolost2605.detective', 'vala', 'c')
+project(
+    'io.github.leolost2605.detective',
+    'vala', 'c',
+    version: '0.1.0'
+)
 
 pkgconfig = import('pkgconfig')
 i18n = import('i18n')
