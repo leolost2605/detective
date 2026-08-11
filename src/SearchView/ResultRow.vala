@@ -12,7 +12,8 @@ public class Detective.ResultRow : Granite.Bin {
 
         label = new Gtk.Label ("") {
             hexpand = true,
-            xalign = 0
+            xalign = 0,
+            ellipsize = END
         };
 
         var content = new Granite.Box (HORIZONTAL, HALF) {
