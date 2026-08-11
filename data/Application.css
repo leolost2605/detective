@@ -15,3 +15,8 @@ listview.results-list > row:selected {
 .result-heading {
     font-weight: bold;
 }
+
+grid.app-grid {
+    border-spacing: 2rem;
+    margin: 2rem;
+}

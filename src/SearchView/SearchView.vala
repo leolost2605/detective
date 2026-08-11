@@ -8,7 +8,6 @@ public class Detective.SearchView : Granite.Bin {
 
     public Engine engine { get; construct; }
 
-    private Gtk.SearchEntry entry;
     private Gtk.SingleSelection selection_model;
     private Gtk.ListView list_view;
     private Gtk.ScrolledWindow scrolled_window;
@@ -18,15 +17,6 @@ public class Detective.SearchView : Granite.Bin {
     }
 
     construct {
-        entry = new Gtk.SearchEntry () {
-            margin_top = 6,
-            margin_bottom = 6,
-            margin_start = 6,
-            margin_end = 6,
-            placeholder_text = _("Search apps, files and more..."),
-            search_delay = 0
-        };
-
         selection_model = new Gtk.SingleSelection (engine.results) {
             autoselect = false,
             can_unselect = true
@@ -50,7 +40,6 @@ public class Detective.SearchView : Granite.Bin {
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
             propagate_natural_height = true,
-            propagate_natural_width = true,
             hscrollbar_policy = NEVER,
         };
 
@@ -62,45 +51,22 @@ public class Detective.SearchView : Granite.Bin {
         box.append (scrolled_window);
         box.append (preview);
 
-        var clamp = new Adw.Clamp () {
-            child = box,
-            orientation = VERTICAL,
-            maximum_size = MAX_HEIGHT,
-        };
-        selection_model.bind_property (
-            "n-items", clamp, "visible", SYNC_CREATE,
-            (binding, from_value, ref to_value) => {
-                to_value.set_boolean (from_value.get_uint () > 0);
-                return true;
-            }
-        );
+        //  var clamp = new Adw.Clamp () {
+        //      child = box,
+        //      orientation = VERTICAL,
+        //      maximum_size = MAX_HEIGHT,
+        //  };
+        //  selection_model.bind_property (
+        //      "n-items", clamp, "visible", SYNC_CREATE,
+        //      (binding, from_value, ref to_value) => {
+        //          to_value.set_boolean (from_value.get_uint () > 0);
+        //          return true;
+        //      }
+        //  );
 
-        var toolbar_view = new Adw.ToolbarView () {
-            content = clamp
-        };
-        toolbar_view.add_top_bar (entry);
-
-        child = toolbar_view;
-
-        map.connect (() => entry.grab_focus ());
-        unmap.connect (on_unmap);
-
-        entry.search_changed.connect (() => {
-            if (entry.text.strip () != "") {
-                engine.search (entry.text);
-            } else {
-                engine.clear_search ();
-            }
-        });
-
-        entry.activate.connect (on_entry_activated);
-        entry.stop_search.connect (close);
+        child = box;
 
         list_view.activate.connect (activate_result);
-
-        var key_controller = new Gtk.EventControllerKey ();
-        key_controller.key_pressed.connect (on_key_pressed);
-        child.add_controller (key_controller);
 
         selection_model.items_changed.connect_after (on_items_changed);
     }
@@ -132,12 +98,7 @@ public class Detective.SearchView : Granite.Bin {
         ((Gtk.Label) list_header.child).label = item.result_type_name;
     }
 
-    private void on_unmap () {
-        engine.clear_search ();
-        entry.text = "";
-    }
-
-    private void on_entry_activated () {
+    public void activate_selected () {
         activate_result.begin (selection_model.selected);
     }
 
@@ -155,15 +116,6 @@ public class Detective.SearchView : Granite.Bin {
         }
 
         close ();
-    }
-
-    private bool on_key_pressed (uint keyval, uint keycode) {
-        if (keyval == Gdk.Key.Escape) {
-            close ();
-            return Gdk.EVENT_STOP;
-        }
-
-        return Gdk.EVENT_PROPAGATE;
     }
 
     private void on_items_changed () {

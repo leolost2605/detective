@@ -1,7 +1,13 @@
 app_sources = [
     'Application.vala',
+    'MainView.vala',
     'ShellKeyGrabber.vala',
     'Window.vala',
+    'AppCarousel' / 'AppCarousel.vala',
+    'AppCarousel' / 'AppCarouselPage.vala',
+    'AppCarousel' / 'AppListItem.vala',
+    'AppSystem' / 'App.vala',
+    'AppSystem' / 'AppCache.vala',
     'SearchView' / 'ResultRow.vala',
     'SearchView' / 'SearchView.vala',
     'SearchView' / 'Preview' / 'GenericPreview.vala',

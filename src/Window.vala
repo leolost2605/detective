@@ -14,9 +14,8 @@ public class Detective.Window : Gtk.ApplicationWindow {
         var search_view = new SearchView (engine);
 
         resizable = false;
-        child = search_view;
+        child = new MainView (engine);
         titlebar = new Gtk.Grid () { visible = false };
-        default_width = 700;
         hide_on_close = true;
 
         notify["is-active"].connect (on_is_active_changed);
@@ -24,7 +23,7 @@ public class Detective.Window : Gtk.ApplicationWindow {
 
     private void on_is_active_changed () {
         if (!is_active) {
-            close ();
+            //  close ();
         }
     }
 }
