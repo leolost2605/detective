@@ -12,14 +12,15 @@ public class Detective.ResultRow : Granite.Bin {
 
         label = new Gtk.Label ("") {
             hexpand = true,
-            xalign = 0
+            xalign = 0,
+            ellipsize = END
         };
 
-        var content = new Gtk.Box (HORIZONTAL, 6) {
-            margin_start = 12,
-            margin_end = 12,
+        var content = new Granite.Box (HORIZONTAL, HALF) {
             margin_top = 6,
-            margin_bottom = 6
+            margin_bottom = 6,
+            margin_start = 6,
+            margin_end = 6,
         };
         content.append (icon);
         content.append (label);

@@ -1,0 +1,17 @@
+listview.results-list > row {
+    border-radius: 4px;
+}
+
+listview.results-list {
+    margin-left: 6px;
+    margin-right: 6px;
+    border-spacing: 2px;
+}
+
+listview.results-list > row:selected {
+    background: @selected_bg_color;
+}
+
+.result-heading {
+    font-weight: bold;
+}

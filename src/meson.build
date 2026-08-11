@@ -11,6 +11,7 @@ app_sources = [
 executable(
     meson.project_name(),
     app_sources,
+    gresource,
     dependencies: app_deps,
     install: true
 )
