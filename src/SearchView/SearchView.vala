@@ -4,8 +4,6 @@
  */
 
 public class Detective.SearchView : Granite.Bin {
-    private const int MAX_HEIGHT = 300;
-
     public Engine engine { get; construct; }
 
     private Gtk.SingleSelection selection_model;
@@ -39,7 +37,6 @@ public class Detective.SearchView : Granite.Bin {
 
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
-            propagate_natural_height = true,
             hscrollbar_policy = NEVER,
         };
 
@@ -50,19 +47,6 @@ public class Detective.SearchView : Granite.Bin {
         };
         box.append (scrolled_window);
         box.append (preview);
-
-        //  var clamp = new Adw.Clamp () {
-        //      child = box,
-        //      orientation = VERTICAL,
-        //      maximum_size = MAX_HEIGHT,
-        //  };
-        //  selection_model.bind_property (
-        //      "n-items", clamp, "visible", SYNC_CREATE,
-        //      (binding, from_value, ref to_value) => {
-        //          to_value.set_boolean (from_value.get_uint () > 0);
-        //          return true;
-        //      }
-        //  );
 
         child = box;
 
