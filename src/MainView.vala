@@ -4,9 +4,6 @@
  */
 
 public class Detective.MainView : Granite.Bin {
-    private const string APP_GRID = "app-grid";
-    private const string SEARCH_VIEW = "search-view";
-
     public Engine engine { private get; construct; }
 
     private Gtk.SearchEntry entry;

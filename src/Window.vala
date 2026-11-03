@@ -24,7 +24,7 @@ public class Detective.Window : Gtk.ApplicationWindow {
 
     private void on_is_active_changed () {
         if (!is_active) {
-            //  close ();
+            close ();
         }
     }
 }
