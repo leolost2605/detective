@@ -1,5 +1,6 @@
 app_sources = [
     'Application.vala',
+    'MainView.vala',
     'ShellKeyGrabber.vala',
     'Window.vala',
     'SearchView' / 'ResultRow.vala',
@@ -11,6 +12,7 @@ app_sources = [
 executable(
     meson.project_name(),
     app_sources,
+    gresource,
     dependencies: app_deps,
     install: true
 )

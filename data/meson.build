@@ -43,3 +43,8 @@ foreach i : icon_sizes
         rename: meson.project_name() + '.svg'
     )
 endforeach
+
+gresource = gnome.compile_resources(
+    'gresource',
+    meson.project_name() + '.gresource.xml',
+)

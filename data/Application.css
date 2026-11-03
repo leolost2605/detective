@@ -1,0 +1,16 @@
+listview.results-list {
+    border-spacing: 2px;
+}
+
+listview.results-list > row:selected {
+    background: @selected_bg_color;
+}
+
+.result-heading {
+    font-weight: bold;
+}
+
+grid.app-grid {
+    border-spacing: 2rem;
+    margin: 2rem;
+}
