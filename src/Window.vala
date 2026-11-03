@@ -17,6 +17,7 @@ public class Detective.Window : Gtk.ApplicationWindow {
         child = new MainView (engine);
         titlebar = new Gtk.Grid () { visible = false };
         hide_on_close = true;
+        default_width = 800;
 
         notify["is-active"].connect (on_is_active_changed);
     }
