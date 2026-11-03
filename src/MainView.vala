@@ -11,7 +11,6 @@ public class Detective.MainView : Granite.Bin {
 
     private Gtk.SearchEntry entry;
     private SearchView search_view;
-    private Gtk.Stack stack;
 
     public MainView (Engine engine) {
         Object (engine: engine);
@@ -27,18 +26,10 @@ public class Detective.MainView : Granite.Bin {
             search_delay = 0
         };
 
-        var app_carousel = new AppCarousel ();
-
         search_view = new SearchView (engine);
 
-        stack = new Gtk.Stack () {
-            transition_type = CROSSFADE
-        };
-        stack.add_named (app_carousel, APP_GRID);
-        stack.add_named (search_view, SEARCH_VIEW);
-
         var toolbar_view = new Adw.ToolbarView () {
-            content = stack
+            content = search_view
         };
         toolbar_view.add_top_bar (entry);
 
@@ -64,10 +55,8 @@ public class Detective.MainView : Granite.Bin {
     private void on_search_changed () {
         if (entry.text.strip () != "") {
             engine.search (entry.text);
-            stack.visible_child_name = SEARCH_VIEW;
         } else {
             engine.clear_search ();
-            stack.visible_child_name = APP_GRID;
         }
     }
 

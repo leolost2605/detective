@@ -37,6 +37,8 @@ public class Detective.SearchView : Granite.Bin {
 
         scrolled_window = new Gtk.ScrolledWindow () {
             child = list_view,
+            propagate_natural_height = true,
+            max_content_height = 400,
             hscrollbar_policy = NEVER,
         };
 
